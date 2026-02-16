@@ -9,113 +9,88 @@
 </head>
 <body>
   <main class="app">
+    <div class="top-actions">
+      <div class="lang-switch" role="group" aria-label="Language switcher">
+        <button type="button" class="lang-btn active" data-lang="ko">KO</button>
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </div>
+
     <header class="hero">
-      <p class="eyebrow">Next-Gen Career Architect</p>
-      <h1>AI 커리어 진화 액셀러레이터</h1>
-      <p>
-        강점과 경력을 분석해 AI 시대에 연봉 성장을 노릴 수 있는 진화형 신직업과
-        실행 로드맵을 제안합니다.
+      <p class="eyebrow" data-i18n="hero_eyebrow">Next-Gen Career Architect</p>
+      <h1 data-i18n="hero_title">AI 커리어 진화 액셀러레이터</h1>
+      <p data-i18n="hero_subtitle">
+        나의 성격과 강점, 현재 경력과 보유 스킬을 분석해 AI 시대에 연봉 성장을 노릴 수 있는
+        진화형 신직업과 실행 로드맵을 제안합니다.
       </p>
     </header>
 
     <section class="panel">
-      <h2>커리어 진단</h2>
+      <h2 data-i18n="section_diagnosis">커리어 진단</h2>
       <form id="career-form">
         <div class="field-row">
           <div class="field field-card">
-            <label for="current-role">현재 직무</label>
+            <label for="current-role" data-i18n="label_current_role">현재 직무</label>
             <input
               id="current-role"
               name="current-role"
               type="text"
-              placeholder="예: B2B SaaS 세일즈 오퍼레이션 매니저 (파이프라인 관리, CRM 자동화)"
+              data-i18n-placeholder="ph_current_role"
             >
-            <p class="hint">산업/역할/핵심업무까지 함께 적어주면 진단 정확도가 올라갑니다.</p>
+            <p class="hint" data-i18n="hint_current_role">산업/역할/핵심업무까지 함께 적어주면 진단 정확도가 올라갑니다.</p>
           </div>
 
           <div class="field field-card">
-            <label for="career-years">연차</label>
+            <label for="career-years" data-i18n="label_career_years">연차</label>
             <select id="career-years" name="career-years">
-              <option value="">선택해주세요</option>
-              <option>신입 (0년차)</option>
-              <option>1년차</option>
-              <option>2년차</option>
-              <option>3년차</option>
-              <option>4년차</option>
-              <option>5년차</option>
-              <option>6년차</option>
-              <option>7년차</option>
-              <option>8년차</option>
-              <option>9년차</option>
-              <option>10년차</option>
-              <option>11년차</option>
-              <option>12년차</option>
-              <option>13년차</option>
-              <option>14년차</option>
-              <option>15년차</option>
-              <option>16년차</option>
-              <option>17년차</option>
-              <option>18년차</option>
-              <option>19년차</option>
-              <option>20년차</option>
-              <option>21년차</option>
-              <option>22년차</option>
-              <option>23년차</option>
-              <option>24년차</option>
-              <option>25년차</option>
-              <option>26년차</option>
-              <option>27년차</option>
-              <option>28년차</option>
-              <option>29년차</option>
-              <option>30년차</option>
             </select>
           </div>
         </div>
 
         <div class="field field-card">
-          <label>MBTI <span class="label-note">(최대 2개 선택)</span></label>
+          <label><span data-i18n="label_mbti">MBTI</span> <span class="label-note" data-i18n="note_mbti">(최대 2개 선택)</span></label>
           <div id="mbti-grid" class="chips"></div>
           <p class="hint" id="mbti-hint">0 / 2 선택됨</p>
         </div>
 
         <div class="field field-card">
-          <label>나의 강점 <span class="label-note">(최대 5개 선택)</span></label>
+          <label><span data-i18n="label_strengths">나의 강점</span> <span class="label-note" data-i18n="note_strengths">(최대 5개 선택)</span></label>
           <div id="strength-grid" class="chips chips--dense"></div>
           <p class="hint" id="strength-hint">0 / 5 선택됨</p>
         </div>
 
         <div class="field field-card">
-          <label for="career-text">경력</label>
-          <textarea id="career-text" placeholder="핵심 경력과 성과를 붙여넣어 주세요."></textarea>
+          <label for="career-text" data-i18n="label_career">경력</label>
+          <textarea id="career-text" data-i18n-placeholder="ph_career_text"></textarea>
           <div class="input-row">
             <input id="career-file" type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
-            <input id="career-url" type="url" placeholder="이력서 URL (Notion, LinkedIn 등)">
+            <input id="career-url" type="url" data-i18n-placeholder="ph_career_url">
           </div>
         </div>
 
         <div class="field field-card">
-          <label>스킬</label>
+          <label data-i18n="label_skills">스킬</label>
           <div id="skills-wrap"></div>
-          <button id="add-skill" type="button" class="btn btn--secondary">스킬 추가</button>
+          <button id="add-skill" type="button" class="btn btn--secondary" data-i18n="btn_add_skill">스킬 추가</button>
         </div>
 
         <div class="field field-card">
-          <label for="weakness-text">기타 <span class="label-note">(ex. 나를 알 수 있는 정보)</span></label>
+          <label for="weakness-text"><span data-i18n="label_etc">기타</span> <span class="label-note" data-i18n="note_etc">(ex. 나를 알 수 있는 정보)</span></label>
           <textarea id="weakness-text"></textarea>
           <div class="input-row">
             <input id="weakness-file" type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
-            <input id="weakness-url" type="url" placeholder="참고 URL">
+            <input id="weakness-url" type="url" data-i18n-placeholder="ph_weakness_url">
           </div>
         </div>
 
-        <button type="submit" class="btn">커리어 진화 리포트 생성</button>
+        <button type="submit" class="btn" data-i18n="btn_submit">커리어 진화 리포트 생성</button>
       </form>
     </section>
 
     <section id="report-panel" class="panel hidden">
-      <h2>3) 커리어 진화 리포트 샘플/결과</h2>
+      <h2 data-i18n="section_report">커리어 진화 리포트 결과</h2>
       <div id="report" class="report empty">
-        입력 후 리포트를 생성하면 여기에 결과가 표시됩니다.
+        <span data-i18n="report_empty">입력 후 리포트를 생성하면 여기에 결과가 표시됩니다.</span>
       </div>
     </section>
   </main>

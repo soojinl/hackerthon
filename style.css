@@ -60,6 +60,40 @@ body {
   padding: 34px 16px 72px;
 }
 
+.top-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  border: 1px solid #e6e9f6;
+  background: #ffffffcc;
+  backdrop-filter: blur(8px);
+}
+
+.lang-btn {
+  border: 0;
+  min-width: 52px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  color: #5b6784;
+  background: transparent;
+  cursor: pointer;
+}
+
+.lang-btn.active {
+  color: #fff;
+  background: linear-gradient(130deg, #ff8e9e 0%, #7eb5ff 100%);
+  box-shadow: 0 8px 14px -10px rgba(57, 74, 110, 0.7);
+}
+
 .hero {
   padding: 34px;
   border: 1px solid #f8dce2;

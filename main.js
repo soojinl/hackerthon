@@ -237,9 +237,159 @@ const form = document.getElementById("career-form");
 const submitBtn = form.querySelector('button[type="submit"]');
 const reportPanel = document.getElementById("report-panel");
 const reportNode = document.getElementById("report");
+const langButtons = Array.from(document.querySelectorAll(".lang-btn"));
+const careerYearsSelect = document.getElementById("career-years");
 
-function renderChips(items, container, name, maxCount, hintNode) {
-  const lang = (document.documentElement.lang || "ko").toLowerCase().startsWith("en") ? "en" : "ko";
+const I18N = {
+  ko: {
+    hero_eyebrow: "Next-Gen Career Architect",
+    hero_title: "AI 커리어 진화 액셀러레이터",
+    hero_subtitle: "나의 성격과 강점, 현재 경력과 보유 스킬을 분석해 AI 시대에 연봉 성장을 노릴 수 있는 진화형 신직업과 실행 로드맵을 제안합니다.",
+    section_diagnosis: "커리어 진단",
+    label_current_role: "현재 직무",
+    ph_current_role: "예: B2B SaaS 세일즈 오퍼레이션 매니저 (파이프라인 관리, CRM 자동화)",
+    hint_current_role: "산업/역할/핵심업무까지 함께 적어주면 진단 정확도가 올라갑니다.",
+    label_career_years: "연차",
+    years_default: "선택해주세요",
+    years_entry: "신입 (0년차)",
+    years_n: "{n}년차",
+    label_mbti: "MBTI",
+    note_mbti: "(최대 2개 선택)",
+    label_strengths: "나의 강점",
+    note_strengths: "(최대 5개 선택)",
+    label_career: "경력",
+    ph_career_text: "핵심 경력과 성과를 붙여넣어 주세요.",
+    ph_career_url: "이력서 URL (Notion, LinkedIn 등)",
+    label_skills: "스킬",
+    btn_add_skill: "스킬 추가",
+    label_etc: "기타",
+    note_etc: "(ex. 나를 알 수 있는 정보)",
+    ph_weakness_url: "참고 URL",
+    btn_submit: "커리어 진화 리포트 생성",
+    btn_analyzing: "분석 중...",
+    section_report: "커리어 진화 리포트 결과",
+    report_empty: "입력 후 리포트를 생성하면 여기에 결과가 표시됩니다.",
+    hint_limit: "최대 {max}개까지 선택 가능합니다.",
+    hint_selected: "{count} / {max} 선택됨",
+    skill_custom_option: "직접 입력",
+    skill_remove: "삭제",
+    ph_skill_custom: "직접 입력 스킬 (예: 협상, 예산관리, 리스크 관리)",
+    loading_title: "AI 커리어 시뮬레이션 분석 중",
+    loading_phase_1: "입력 데이터 정규화 및 직무 매칭을 시작합니다.",
+    loading_phase_2: "LinkedIn 채용 시그널과 스킬 갭을 계산하고 있습니다.",
+    loading_phase_3: "시장 리포트 근거를 반영해 실행 계획을 구성하고 있습니다.",
+    loading_phase_4: "최종 리포트를 정리하고 있습니다.",
+    loading_seconds: "{phase} ({seconds}초)"
+  },
+  en: {
+    hero_eyebrow: "Next-Gen Career Architect",
+    hero_title: "AI Career Evolution Accelerator",
+    hero_subtitle: "By analyzing your personality, strengths, current career, and skills, we suggest high-growth emerging roles and an execution roadmap for the AI era.",
+    section_diagnosis: "Career Diagnosis",
+    label_current_role: "Current Role",
+    ph_current_role: "e.g., B2B SaaS Sales Operations Manager (pipeline management, CRM automation)",
+    hint_current_role: "Include industry, role scope, and core responsibilities for a more accurate diagnosis.",
+    label_career_years: "Years of Experience",
+    years_default: "Select one",
+    years_entry: "Entry level (0 years)",
+    years_n: "{n} years",
+    label_mbti: "MBTI",
+    note_mbti: "(up to 2 selections)",
+    label_strengths: "My Strengths",
+    note_strengths: "(up to 5 selections)",
+    label_career: "Career History",
+    ph_career_text: "Paste your core experience and outcomes.",
+    ph_career_url: "Resume URL (Notion, LinkedIn, etc.)",
+    label_skills: "Skills",
+    btn_add_skill: "Add Skill",
+    label_etc: "Etc.",
+    note_etc: "(e.g., additional information about me)",
+    ph_weakness_url: "Reference URL",
+    btn_submit: "Generate Career Evolution Report",
+    btn_analyzing: "Analyzing...",
+    section_report: "Career Evolution Report",
+    report_empty: "Your generated report will appear here after submission.",
+    hint_limit: "You can select up to {max}.",
+    hint_selected: "{count} / {max} selected",
+    skill_custom_option: "Custom Input",
+    skill_remove: "Remove",
+    ph_skill_custom: "Custom skill (e.g., negotiation, budget planning, risk management)",
+    loading_title: "Running AI Career Simulation",
+    loading_phase_1: "Normalizing input and starting role matching.",
+    loading_phase_2: "Calculating LinkedIn hiring signals and skill gaps.",
+    loading_phase_3: "Building the execution plan using market evidence.",
+    loading_phase_4: "Finalizing your report.",
+    loading_seconds: "{phase} ({seconds}s)"
+  }
+};
+
+function getCurrentLanguage() {
+  return (document.documentElement.lang || "ko").toLowerCase().startsWith("en") ? "en" : "ko";
+}
+
+function t(key, vars = {}) {
+  const lang = getCurrentLanguage();
+  const dict = I18N[lang] || I18N.ko;
+  const template = dict[key] ?? I18N.ko[key] ?? key;
+  return template.replace(/\{(\w+)\}/g, (_, token) => String(vars[token] ?? ""));
+}
+
+function populateCareerYearOptions() {
+  const selected = careerYearsSelect.value;
+  const options = [`<option value="">${t("years_default")}</option>`, `<option value="0">${t("years_entry")}</option>`];
+  for (let year = 1; year <= 30; year += 1) {
+    options.push(`<option value="${year}">${t("years_n", { n: year })}</option>`);
+  }
+  careerYearsSelect.innerHTML = options.join("");
+  careerYearsSelect.value = selected;
+}
+
+function applyStaticI18n() {
+  document.querySelectorAll("[data-i18n]").forEach((node) => {
+    node.textContent = t(node.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+    node.placeholder = t(node.dataset.i18nPlaceholder);
+  });
+}
+
+function setSelectionHint(hintNode, count, max) {
+  hintNode.textContent = t("hint_selected", { count, max });
+}
+
+function applyLanguage(lang) {
+  document.documentElement.lang = lang;
+  langButtons.forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.lang === lang);
+  });
+
+  applyStaticI18n();
+  populateCareerYearOptions();
+
+  const selectedMbti = collectSelected("mbti");
+  const selectedStrength = collectSelected("strength");
+  renderChips(MBTI_TYPES, mbtiGrid, "mbti", 2, mbtiHint, selectedMbti);
+  renderChips(CLIFTON_STRENGTHS, strengthGrid, "strength", 5, strengthHint, selectedStrength);
+
+  const snapshot = Array.from(document.querySelectorAll(".skills-row")).map((row) => ({
+    selectedSkill: row.querySelector(".skill-name").value,
+    customSkill: row.querySelector(".skill-custom")?.value || "",
+    level: row.querySelector(".skill-level").value
+  }));
+
+  skillsWrap.innerHTML = "";
+  snapshot.forEach((item) => {
+    if (item.selectedSkill === CUSTOM_SKILL_VALUE) {
+      createSkillRow(item.customSkill, item.level, true);
+    } else {
+      createSkillRow(item.selectedSkill, item.level);
+    }
+  });
+}
+
+function renderChips(items, container, name, maxCount, hintNode, selectedValues = []) {
+  const lang = getCurrentLanguage();
+  const selectedSet = new Set(selectedValues);
   container.innerHTML = "";
   items.forEach((item) => {
     const normalized = typeof item === "string"
@@ -249,44 +399,49 @@ function renderChips(items, container, name, maxCount, hintNode) {
     label.className = "chip";
     label.innerHTML = `<input type="checkbox" name="${name}" value="${normalized.value}">${normalized.label}`;
     const input = label.querySelector("input");
+    if (selectedSet.has(normalized.value)) {
+      input.checked = true;
+      label.classList.add("active");
+    }
 
     input.addEventListener("change", () => {
       const checked = container.querySelectorAll("input:checked");
       if (checked.length > maxCount) {
         input.checked = false;
         hintNode.classList.add("error");
-        hintNode.textContent = `최대 ${maxCount}개까지 선택 가능합니다.`;
+        hintNode.textContent = t("hint_limit", { max: maxCount });
         setTimeout(() => {
           hintNode.classList.remove("error");
-          hintNode.textContent = `${container.querySelectorAll("input:checked").length} / ${maxCount} 선택됨`;
+          setSelectionHint(hintNode, container.querySelectorAll("input:checked").length, maxCount);
         }, 1000);
       }
       container.querySelectorAll(".chip").forEach((chip) => {
         chip.classList.toggle("active", chip.querySelector("input").checked);
       });
-      hintNode.textContent = `${container.querySelectorAll("input:checked").length} / ${maxCount} 선택됨`;
+      setSelectionHint(hintNode, container.querySelectorAll("input:checked").length, maxCount);
     });
     container.appendChild(label);
   });
+  setSelectionHint(hintNode, container.querySelectorAll("input:checked").length, maxCount);
 }
 
-function createSkillRow(skill = "", level = "mid") {
+function createSkillRow(skill = "", level = "mid", forceCustom = false) {
   const row = document.createElement("div");
   row.className = "skills-row";
-  const isPresetSkill = SKILL_OPTIONS.includes(skill);
+  const isPresetSkill = !forceCustom && SKILL_OPTIONS.includes(skill);
   const selectedSkill = isPresetSkill ? skill : CUSTOM_SKILL_VALUE;
   const customSkill = isPresetSkill ? "" : skill;
 
   row.innerHTML = `
     <select class="skill-name">
       ${SKILL_OPTIONS.map((s) => `<option value="${s}" ${s === selectedSkill ? "selected" : ""}>${s}</option>`).join("")}
-      <option value="${CUSTOM_SKILL_VALUE}" ${selectedSkill === CUSTOM_SKILL_VALUE ? "selected" : ""}>직접 입력</option>
+      <option value="${CUSTOM_SKILL_VALUE}" ${selectedSkill === CUSTOM_SKILL_VALUE ? "selected" : ""}>${t("skill_custom_option")}</option>
     </select>
     <select class="skill-level">
       ${LEVEL_OPTIONS.map((l) => `<option value="${l}" ${l === level ? "selected" : ""}>${l}</option>`).join("")}
     </select>
-    <button type="button" class="btn btn--danger remove-skill">삭제</button>
-    <input type="text" class="skill-custom ${selectedSkill === CUSTOM_SKILL_VALUE ? "" : "hidden"}" placeholder="직접 입력 스킬 (예: 협상, 예산관리, 리스크 관리)">
+    <button type="button" class="btn btn--danger remove-skill">${t("skill_remove")}</button>
+    <input type="text" class="skill-custom ${selectedSkill === CUSTOM_SKILL_VALUE ? "" : "hidden"}" placeholder="${t("ph_skill_custom")}">
   `;
 
   const nameSelect = row.querySelector(".skill-name");
@@ -478,8 +633,8 @@ function showLoadingState() {
   reportNode.innerHTML = `
     <div class="loading-card">
       <div class="loading-spinner" aria-hidden="true"></div>
-      <h3>AI 커리어 시뮬레이션 분석 중</h3>
-      <p id="loading-text">입력 데이터 정규화 및 직무 매칭을 시작합니다. (7초)</p>
+      <h3>${t("loading_title")}</h3>
+      <p id="loading-text">${t("loading_seconds", { phase: t("loading_phase_1"), seconds: 7 })}</p>
       <div class="loading-track">
         <div id="loading-progress" class="loading-progress" style="width: 0%"></div>
       </div>
@@ -487,10 +642,10 @@ function showLoadingState() {
   `;
 
   const phases = [
-    "입력 데이터 정규화 및 직무 매칭을 시작합니다.",
-    "LinkedIn 채용 시그널과 스킬 갭을 계산하고 있습니다.",
-    "시장 리포트 근거를 반영해 실행 계획을 구성하고 있습니다.",
-    "최종 리포트를 정리하고 있습니다."
+    t("loading_phase_1"),
+    t("loading_phase_2"),
+    t("loading_phase_3"),
+    t("loading_phase_4")
   ];
 
   let remaining = 7;
@@ -503,7 +658,7 @@ function showLoadingState() {
     phaseIdx = Math.min(phases.length - 1, phaseIdx + 1);
     const done = Math.round(((7 - remaining) / 7) * 100);
     if (progressNode) progressNode.style.width = `${done}%`;
-    if (textNode) textNode.textContent = `${phases[phaseIdx]} (${Math.max(remaining, 0)}초)`;
+    if (textNode) textNode.textContent = t("loading_seconds", { phase: phases[phaseIdx], seconds: Math.max(remaining, 0) });
     if (remaining <= 0) clearInterval(timer);
   }, 1000);
 
@@ -674,12 +829,12 @@ form.addEventListener("submit", async (event) => {
   if (form.dataset.loading === "true") return;
   form.dataset.loading = "true";
   submitBtn.disabled = true;
-  submitBtn.textContent = "분석 중...";
+  submitBtn.textContent = t("btn_analyzing");
 
   try {
     const profile = {
       currentRole: document.getElementById("current-role").value.trim(),
-      careerYears: document.getElementById("career-years").value.trim(),
+      careerYears: document.getElementById("career-years").selectedOptions[0]?.textContent?.trim() || "",
       mbti: collectSelected("mbti"),
       strengths: collectSelected("strength"),
       careerText: document.getElementById("career-text").value.trim(),
@@ -699,11 +854,13 @@ form.addEventListener("submit", async (event) => {
   } finally {
     form.dataset.loading = "false";
     submitBtn.disabled = false;
-    submitBtn.textContent = "커리어 진화 리포트 생성";
+    submitBtn.textContent = t("btn_submit");
   }
 });
 
-renderChips(MBTI_TYPES, mbtiGrid, "mbti", 2, mbtiHint);
-renderChips(CLIFTON_STRENGTHS, strengthGrid, "strength", 5, strengthHint);
 createSkillRow("Communication", "mid");
 createSkillRow("Project Management", "mid");
+langButtons.forEach((button) => {
+  button.addEventListener("click", () => applyLanguage(button.dataset.lang));
+});
+applyLanguage(getCurrentLanguage());
