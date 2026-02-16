@@ -732,18 +732,23 @@ function evaluateExperienceSignal(profile) {
 }
 
 function calculateRoleRelevance(profile, role) {
-  const text = `${profile.currentRole || ""}\n${profile.careerText || ""}`.toLowerCase();
+  const currentRoleText = (profile.currentRole || "").toLowerCase();
+  const careerText = (profile.careerText || "").toLowerCase();
   const keywords = (role.relevanceKeywords || []).map((keyword) => keyword.toLowerCase());
-  const hits = keywords.filter((keyword) => keyword && text.includes(keyword));
-  const uniqueHits = [...new Set(hits)];
-  const points = Math.min(30, uniqueHits.length * 6);
+  const currentRoleHits = [...new Set(keywords.filter((keyword) => keyword && currentRoleText.includes(keyword)))];
+  const careerHits = [...new Set(keywords.filter((keyword) => keyword && careerText.includes(keyword)))];
+  const uniqueHits = [...new Set([...currentRoleHits, ...careerHits])];
+  const points = Math.min(60, currentRoleHits.length * 14 + careerHits.length * 4);
   const hasCurrentRoleInput = (profile.currentRole || "").trim().length > 0;
-  const mismatchPenalty = hasCurrentRoleInput && uniqueHits.length === 0 ? 14 : 0;
+  const mismatchPenalty = hasCurrentRoleInput && currentRoleHits.length === 0 ? 42 : 0;
+  const matchBonus = hasCurrentRoleInput && currentRoleHits.length > 0 ? 12 : 0;
 
   return {
-    points,
+    points: points + matchBonus,
     mismatchPenalty,
-    hits: uniqueHits
+    hits: uniqueHits,
+    currentRoleHits,
+    careerHits
   };
 }
 
@@ -1028,7 +1033,7 @@ function renderReport(profile, result) {
           <p><strong>성격(MBTI):</strong> ${persona.mbti}</p>
           <p><strong>백그라운드:</strong> ${companiesText}까지 이어진 경력 흐름</p>
           <p class="hint">경력 신호: ${result.experienceSignal.years}년차 · 기업 언급 ${result.experienceSignal.signals.companyHits}회 · 정량 성과 ${result.experienceSignal.signals.metricHits}건 · 리더십 표현 ${result.experienceSignal.signals.leadershipHits}회</p>
-          <p class="hint">현재 직무 연관 키워드: ${(result.topRole.analysis.relevance.hits || []).slice(0, 5).join(", ") || "연관 키워드 미검출"}</p>
+          <p class="hint">현재 직무 연관 키워드: ${(result.topRole.analysis.relevance.currentRoleHits || []).slice(0, 5).join(", ") || "연관 키워드 미검출"}</p>
           <p><strong>[종합 진단]</strong> 단순 운영형 인재가 아니라, 데이터를 통해 기회를 포착하고 전략을 실행으로 전환하는 시니어 성장 설계자 유형입니다.</p>
         </div>
       </div>
