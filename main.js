@@ -1019,6 +1019,65 @@ function buildFutureEvolutionInsights(profile) {
   };
 }
 
+function getDomainLabel(domain, isEn) {
+  const labels = {
+    marketing: isEn ? "Marketing/Growth" : "마케팅/그로스",
+    sales: isEn ? "Sales/Revenue" : "영업/수익",
+    finance: isEn ? "Finance/FP&A" : "재무/전략",
+    product: isEn ? "Product/Service" : "프로덕트/서비스",
+    supply: isEn ? "Supply/Operations" : "공급망/운영",
+    hr: isEn ? "People/HR" : "인사/조직",
+    unknown: isEn ? "General Business" : "비즈니스 전반"
+  };
+  return labels[domain] || labels.unknown;
+}
+
+function buildCoreEvolutionIndicators(profile, topRole, roleGapSignals, weightedDemandReadiness) {
+  const isEn = getCurrentLanguage() === "en";
+  const domain = detectCurrentRoleDomain(profile.currentRole);
+  const domainLabel = getDomainLabel(domain, isEn);
+  const years = profile.careerYearsValue || 0;
+  const experienceSignals = topRole.analysis.experienceSignal.signals;
+  const currentRoleHits = (topRole.analysis.relevance.currentRoleHits || []).length;
+  const criticalHits = (topRole.analysis.relevance.criticalHits || []).length;
+  const strengths = profile.strengths.slice(0, 2).map(getStrengthLabel);
+  const strengthText = strengths.length ? strengths.join(isEn ? " + " : " + ") : (isEn ? "your core strengths" : "핵심 강점");
+  const firstGap = roleGapSignals[0]?.skill || "Strategic Planning";
+  const secondGap = roleGapSignals[1]?.skill || "Data Analysis";
+
+  if (isEn) {
+    return [
+      {
+        title: "Operation → Strategy",
+        detail: `With ${years} years in ${domainLabel}, plus ${experienceSignals.companyHits} company references and ${experienceSignals.metricHits} quantified outcomes, your profile already signals strategy potential beyond execution. The next jump is to convert ${firstGap}/${secondGap} into decision architecture.`
+      },
+      {
+        title: "Execution → Auditing",
+        detail: `${strengthText} is a strong fit for validating AI outputs. Your current hiring-requirement fit is ${weightedDemandReadiness}%, so your leverage point is building an AI review loop (quality criteria → audit cadence → rollback rules) instead of manual end-to-end execution.`
+      },
+      {
+        title: "Fragmented → Integrated",
+        detail: `You already show ${currentRoleHits} role-keyword overlaps and ${criticalHits} critical keyword overlaps with ${topRole.name}. Move from isolated tasks to one integrated system that links KPI, workflow automation, and business impact.`
+      }
+    ];
+  }
+
+  return [
+    {
+      title: "Operation → Strategy",
+      detail: `${domainLabel}에서 ${years}년 경력, 기업 신호 ${experienceSignals.companyHits}개, 정량 성과 ${experienceSignals.metricHits}건이 확인되어 실행형보다 전략 설계 잠재력이 큽니다. 다음 점프는 ${firstGap}/${secondGap}를 의사결정 구조로 연결하는 것입니다.`
+    },
+    {
+      title: "Execution → Auditing",
+      detail: `${strengthText} 강점 조합은 AI 결과물 검증·개선에 유리합니다. 현재 채용요건 충족도 ${weightedDemandReadiness}% 기준으로, 직접 집행보다 품질 기준-감사 주기-롤백 규칙을 갖춘 AI 검수 체계로 전환할 때 임팩트가 커집니다.`
+    },
+    {
+      title: "Fragmented → Integrated",
+      detail: `현재 직무 키워드 일치 ${currentRoleHits}개, 핵심 키워드 일치 ${criticalHits}개로 ${topRole.name}와의 연결성이 확인됩니다. 파편화된 태스크가 아니라 KPI-자동화-비즈니스 성과를 하나로 묶는 통합 운영 구조로 전환해야 합니다.`
+    }
+  ];
+}
+
 function buildEvolutionResult(profile) {
   const isEn = getCurrentLanguage() === "en";
   const scored = ROLE_PROFILES
@@ -1174,6 +1233,7 @@ function buildEvolutionResult(profile) {
     .filter((strength) => Boolean(STRENGTH_REASON_MAP[strength]))
     .map((strength) => `${getStrengthLabel(strength)}: ${STRENGTH_REASON_MAP[strength]}`);
   const futureEvolutionInsights = buildFutureEvolutionInsights(profile);
+  const coreEvolutionIndicators = buildCoreEvolutionIndicators(profile, top, roleGapSignals, weightedDemandReadiness);
 
   return {
     topRole: top,
@@ -1198,7 +1258,8 @@ function buildEvolutionResult(profile) {
     motivation,
     strengthReasonSummary,
     experienceSignal,
-    futureEvolutionInsights
+    futureEvolutionInsights,
+    coreEvolutionIndicators
   };
 }
 
@@ -1320,9 +1381,7 @@ function renderReport(profile, result) {
         <strong>${isEn ? "Core Evolution Indicators" : "진화의 핵심 지표"}</strong>
         <div class="chart-card">
           <ul>
-            <li><b>Operation ➔ Strategy</b>: ${isEn ? "Move from execution-heavy operations to system-level strategy design." : "단순 운영에서 전략 수립으로 이동."}</li>
-            <li><b>Execution ➔ Auditing</b>: ${isEn ? "Move from doing everything manually to auditing and approving AI outcomes." : "직접 실행에서 AI 결과물 검토·승인 역할로 이동."}</li>
-            <li><b>Fragmented ➔ Integrated</b>: ${isEn ? "Move from fragmented tasks to integrated data-to-impact orchestration." : "파편화된 업무가 아닌, 통합 데이터 기반 비즈니스 임팩트 설계로 이동."}</li>
+            ${(result.coreEvolutionIndicators || []).map((item) => `<li><b>${item.title}</b>: ${item.detail}</li>`).join("")}
           </ul>
         </div>
       </div>
