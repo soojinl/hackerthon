@@ -1,15 +1,84 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+  <title>AI 커리어 진화 액셀러레이터</title>
+  <link href="/style.css" rel="stylesheet">
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
+  <main class="app">
+    <header class="hero">
+      <p class="eyebrow">Next-Gen Career Architect</p>
+      <h1>AI 커리어 진화 액셀러레이터</h1>
+      <p>
+        강점과 경력을 분석해 AI 시대에 연봉 성장을 노릴 수 있는 진화형 신직업과
+        실행 로드맵을 제안합니다.
+      </p>
+    </header>
+
+    <section class="panel">
+      <h2>1) 사용자 입력</h2>
+      <form id="career-form">
+        <div class="field">
+          <label for="name">이름(선택)</label>
+          <input id="name" name="name" type="text" placeholder="홍길동">
+        </div>
+
+        <div class="field">
+          <label>MBTI (최대 2개 선택)</label>
+          <div id="mbti-grid" class="chips"></div>
+          <p class="hint" id="mbti-hint">0 / 2 선택됨</p>
+        </div>
+
+        <div class="field">
+          <label>Clifton Strengths (최대 5개 선택)</label>
+          <div id="strength-grid" class="chips chips--dense"></div>
+          <p class="hint" id="strength-hint">0 / 5 선택됨</p>
+        </div>
+
+        <div class="field">
+          <label for="career-text">경력/이력서 텍스트</label>
+          <textarea id="career-text" placeholder="핵심 경력과 성과를 붙여넣어 주세요."></textarea>
+          <div class="input-row">
+            <input id="career-file" type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
+            <input id="career-url" type="url" placeholder="이력서 URL (Notion, LinkedIn 등)">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>스킬 & 수준</label>
+          <div id="skills-wrap"></div>
+          <button id="add-skill" type="button" class="btn btn--secondary">스킬 추가</button>
+        </div>
+
+        <div class="field">
+          <label for="weakness-text">약점/기타 정보</label>
+          <textarea id="weakness-text" placeholder="예: 영어 발표가 약함, 시간 관리 어려움, 포트폴리오 부족"></textarea>
+          <div class="input-row">
+            <input id="weakness-file" type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
+            <input id="weakness-url" type="url" placeholder="참고 URL">
+          </div>
+        </div>
+
+        <button type="submit" class="btn">커리어 진화 리포트 생성</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>2) 서비스 시스템 아키텍처 (기술 스택)</h2>
+      <div id="architecture" class="architecture"></div>
+    </section>
+
+    <section class="panel">
+      <h2>3) 커리어 진화 리포트 샘플/결과</h2>
+      <div id="report" class="report empty">
+        입력 후 리포트를 생성하면 여기에 결과가 표시됩니다.
+      </div>
+    </section>
+  </main>
+
   <script defer type="text/javascript" src="/main.js"></script>
 </body>
 </html>
-1
+
