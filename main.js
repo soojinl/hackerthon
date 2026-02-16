@@ -101,6 +101,7 @@ const CUSTOM_SKILL_VALUE = "__custom__";
 
 const LEVEL_OPTIONS = ["low", "mid", "high"];
 const SCORE_NORMALIZER = 227;
+const GENERIC_KEYWORDS = new Set(["조직", "기획", "운영", "관리", "전략", "데이터"]);
 
 const STRENGTH_REASON_MAP = {
   Learner: "배움 강점으로 새 도메인 지식과 규제를 빠르게 학습해 실행 리스크를 낮춥니다.",
@@ -113,6 +114,7 @@ const STRENGTH_REASON_MAP = {
 const ROLE_PROFILES = [
   {
     name: "Tokenized Loyalty Economy Architect",
+    domain: "marketing",
     evolutionFrom: "기존 직무: 전략/사업개발/데이터 기반 성장 리드",
     salaryBand: "1.8억~3.8억+",
     seniorityPreference: "senior",
@@ -138,6 +140,7 @@ const ROLE_PROFILES = [
   },
   {
     name: "AI Marketing ROI & Forecast Strategist",
+    domain: "marketing",
     evolutionFrom: "기존 직무: 마케팅/그로스/사업기획 리드",
     salaryBand: "1.5억~3.2억+",
     seniorityPreference: "senior",
@@ -163,6 +166,7 @@ const ROLE_PROFILES = [
   },
   {
     name: "Multi-Agent Revenue Operations Lead",
+    domain: "sales",
     evolutionFrom: "기존 직무: 운영/사업/프로덕트 조직 리드",
     salaryBand: "1.4억~2.9억+",
     seniorityPreference: "senior",
@@ -188,6 +192,7 @@ const ROLE_PROFILES = [
   },
   {
     name: "Agentic Marketing Systems Architect",
+    domain: "marketing",
     evolutionFrom: "기존 직무: 영업기획/재무/전략기획",
     salaryBand: "1.3억~2.6억+",
     seniorityPreference: "mid",
@@ -213,6 +218,7 @@ const ROLE_PROFILES = [
   },
   {
     name: "AI Supply Chain Decisioning Architect",
+    domain: "supply",
     evolutionFrom: "기존 직무: 물류/SCM/운영기획 리드",
     salaryBand: "1.4억~3.0억+",
     seniorityPreference: "senior",
@@ -238,6 +244,7 @@ const ROLE_PROFILES = [
   },
   {
     name: "AI Finance & Pricing Intelligence Strategist",
+    domain: "finance",
     evolutionFrom: "기존 직무: 재무/FP&A/전략기획",
     salaryBand: "1.5억~3.3억+",
     seniorityPreference: "senior",
@@ -263,6 +270,7 @@ const ROLE_PROFILES = [
   },
   {
     name: "Agentic People Operations Architect",
+    domain: "hr",
     evolutionFrom: "기존 직무: HR/채용/인사운영",
     salaryBand: "1.2억~2.7억+",
     seniorityPreference: "mid",
@@ -288,6 +296,7 @@ const ROLE_PROFILES = [
   },
   {
     name: "AI Product Decision Intelligence PM",
+    domain: "product",
     evolutionFrom: "기존 직무: PM/프로덕트/서비스기획",
     salaryBand: "1.4억~3.1억+",
     seniorityPreference: "senior",
@@ -731,10 +740,33 @@ function evaluateExperienceSignal(profile) {
   };
 }
 
+function detectCurrentRoleDomain(currentRole) {
+  const text = (currentRole || "").toLowerCase();
+  if (!text) return "unknown";
+
+  const domainRules = [
+    { domain: "sales", keywords: ["영업", "sales", "account", "bd", "bizdev", "사업개발", "revenue", "revops"] },
+    { domain: "marketing", keywords: ["마케팅", "브랜드", "광고", "그로스", "캠페인", "crm", "퍼포먼스"] },
+    { domain: "hr", keywords: ["hr", "인사", "채용", "온보딩", "people", "talent"] },
+    { domain: "finance", keywords: ["재무", "회계", "fp&a", "finance", "pricing", "손익", "원가"] },
+    { domain: "supply", keywords: ["scm", "물류", "공급망", "재고", "구매", "logistics", "warehouse"] },
+    { domain: "product", keywords: ["pm", "product", "프로덕트", "서비스기획", "로드맵", "mvp"] }
+  ];
+
+  let best = { domain: "unknown", score: 0 };
+  domainRules.forEach((rule) => {
+    const score = rule.keywords.reduce((acc, keyword) => acc + (text.includes(keyword) ? 1 : 0), 0);
+    if (score > best.score) best = { domain: rule.domain, score };
+  });
+  return best.score > 0 ? best.domain : "unknown";
+}
+
 function calculateRoleRelevance(profile, role) {
   const currentRoleText = (profile.currentRole || "").toLowerCase();
   const careerText = (profile.careerText || "").toLowerCase();
-  const keywords = (role.relevanceKeywords || []).map((keyword) => keyword.toLowerCase());
+  const keywords = (role.relevanceKeywords || [])
+    .map((keyword) => keyword.toLowerCase())
+    .filter((keyword) => keyword.length > 1 && !GENERIC_KEYWORDS.has(keyword));
   const currentRoleHits = [...new Set(keywords.filter((keyword) => keyword && currentRoleText.includes(keyword)))];
   const careerHits = [...new Set(keywords.filter((keyword) => keyword && careerText.includes(keyword)))];
   const uniqueHits = [...new Set([...currentRoleHits, ...careerHits])];
@@ -742,13 +774,28 @@ function calculateRoleRelevance(profile, role) {
   const hasCurrentRoleInput = (profile.currentRole || "").trim().length > 0;
   const mismatchPenalty = hasCurrentRoleInput && currentRoleHits.length === 0 ? 42 : 0;
   const matchBonus = hasCurrentRoleInput && currentRoleHits.length > 0 ? 12 : 0;
+  const currentRoleDomain = detectCurrentRoleDomain(profile.currentRole);
+  const domainMismatchPenalty =
+    currentRoleDomain !== "unknown" &&
+    role.domain &&
+    role.domain !== currentRoleDomain &&
+    currentRoleHits.length === 0
+      ? 35
+      : 0;
+  const domainMatchBonus =
+    currentRoleDomain !== "unknown" &&
+    role.domain &&
+    role.domain === currentRoleDomain
+      ? 14
+      : 0;
 
   return {
-    points: points + matchBonus,
-    mismatchPenalty,
+    points: points + matchBonus + domainMatchBonus,
+    mismatchPenalty: mismatchPenalty + domainMismatchPenalty,
     hits: uniqueHits,
     currentRoleHits,
-    careerHits
+    careerHits,
+    currentRoleDomain
   };
 }
 
