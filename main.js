@@ -100,99 +100,112 @@ const SKILL_OPTIONS = [
 const CUSTOM_SKILL_VALUE = "__custom__";
 
 const LEVEL_OPTIONS = ["low", "mid", "high"];
+const SCORE_NORMALIZER = 227;
+
+const STRENGTH_REASON_MAP = {
+  Learner: "배움 강점으로 새 도메인 지식과 규제를 빠르게 학습해 실행 리스크를 낮춥니다.",
+  Input: "수집 강점으로 시장/정책/경쟁사 데이터를 구조화해 의사결정 품질을 끌어올립니다.",
+  Activator: "행동 강점으로 전략을 빠르게 실험 가능한 단위로 전환해 실행 속도를 높입니다.",
+  Analytical: "분석 강점으로 가설·성과지표를 정량 검증해 성장 방향의 정확도를 높입니다.",
+  Ideation: "발상 강점으로 차별화된 성장 시나리오와 신규 BM 아이디어를 설계할 수 있습니다."
+};
 
 const ROLE_PROFILES = [
   {
-    name: "AI Growth Marketing Ops",
-    evolutionFrom: "기존 직무: 퍼포먼스/그로스 마케터",
-    salaryBand: "8천~1.6억+",
-    neededSkills: ["Digital Marketing", "Prompt Engineering", "SQL", "Power BI", "Project Management"],
-    boostStrengths: ["Strategic", "Analytical", "Communication", "Activator", "Achiever"],
-    boostMbti: ["ENTJ", "ENFP", "ESTJ", "ENTP"],
+    name: "Tokenomics Architect",
+    evolutionFrom: "기존 직무: 전략/사업개발/데이터 기반 성장 리드",
+    salaryBand: "1.8억~3.8억+",
+    seniorityPreference: "senior",
+    neededSkills: ["Strategic Planning", "Financial Analysis", "Data Analysis", "Risk Management", "Leadership"],
+    boostStrengths: ["Analytical", "Strategic", "Ideation", "Learner", "Input"],
+    boostMbti: ["INTJ", "ENTJ", "INTP", "ENTP"],
     hiringSignals: [
-      "캠페인 운영 + 실험(AB Test) 설계 경험",
-      "데이터 기반 예산/성과 최적화 역량",
-      "생성형 AI로 카피/세그먼트/리포트 자동화 경험"
+      "토큰/리워드/인센티브 구조를 수치 기반으로 설계한 경험",
+      "거버넌스/리스크/규제 대응을 고려한 성장 구조 설계 역량",
+      "제품-재무-데이터 조직을 엮어 성장 메커니즘을 설계한 경험"
     ],
     demandSignals: [
-      { skill: "Digital Marketing", demandPercent: 82, evidence: "캠페인 운영/그로스 실험 주도" },
-      { skill: "SQL", demandPercent: 71, evidence: "성과 분석 및 세그먼트 쿼리" },
-      { skill: "Power BI", demandPercent: 63, evidence: "대시보드 리포팅/성과 가시화" },
-      { skill: "Prompt Engineering", demandPercent: 69, evidence: "카피/요약/실험 아이디어 자동화" },
-      { skill: "Project Management", demandPercent: 57, evidence: "캠페인 운영 일정/협업 관리" }
+      { skill: "Strategic Planning", demandPercent: 88, evidence: "중장기 성장 구조 설계" },
+      { skill: "Financial Analysis", demandPercent: 84, evidence: "토큰 경제성·수익성 모델링" },
+      { skill: "Risk Management", demandPercent: 80, evidence: "규제·유동성·운영 리스크 대응" },
+      { skill: "Data Analysis", demandPercent: 78, evidence: "행동 데이터 기반 파라미터 조정" },
+      { skill: "Leadership", demandPercent: 75, evidence: "C-level/핵심 조직 정렬 및 실행 리딩" }
     ],
-    toolStack: ["GA4/Amplitude", "CRM/Ads Manager", "LLM 툴", "BI 대시보드"],
-    outcomeMetrics: ["CAC 절감", "전환율 개선", "실험 속도 증가"],
-    linkedinEvidence: ["Amazon", "Tivity Health", "GetInsured"]
+    toolStack: ["SQL/BI", "시나리오 모델링", "자동화 워크플로", "LLM 분석 도구"],
+    outcomeMetrics: ["LTV/CAC 개선", "리텐션 상승", "토큰 설계 리스크 감소"],
+    linkedinEvidence: ["Animoca Brands", "ConsenSys", "Binance"]
   },
   {
-    name: "AI Sales Enablement Manager",
-    evolutionFrom: "기존 직무: 영업기획/세일즈 오퍼레이션",
-    salaryBand: "8천~1.5억+",
-    neededSkills: ["Sales", "Prompt Engineering", "No-Code Automation", "Consulting", "Stakeholder Communication"],
-    boostStrengths: ["Woo", "Communication", "Activator", "Relator", "Arranger"],
-    boostMbti: ["ENTP", "ENFJ", "ESTP", "ENTJ"],
+    name: "Growth Lead",
+    evolutionFrom: "기존 직무: 마케팅/그로스/사업개발 리드",
+    salaryBand: "1.5억~3.2억+",
+    seniorityPreference: "senior",
+    neededSkills: ["Strategic Planning", "Digital Marketing", "Data Analysis", "Leadership", "Project Management"],
+    boostStrengths: ["Activator", "Analytical", "Ideation", "Communication", "Learner"],
+    boostMbti: ["ENTJ", "ENTP", "ENFJ", "INTJ"],
     hiringSignals: [
-      "영업 파이프라인 분석 및 우선순위 운영 경험",
-      "콜 요약/제안서 초안/CRM 업데이트 자동화 경험",
-      "현업 조직(영업-마케팅-CS)과의 협업 리딩 역량"
+      "성장 전략 수립부터 실행 체계까지 리드한 경험",
+      "획득/활성화/리텐션 지표를 개선한 정량 성과 보유",
+      "데이터 파이프라인·자동화 체계를 설계한 경험"
     ],
     demandSignals: [
-      { skill: "Sales", demandPercent: 84, evidence: "파이프라인/딜 운영 경험" },
-      { skill: "Stakeholder Communication", demandPercent: 77, evidence: "영업-마케팅-제품 간 조율" },
-      { skill: "Prompt Engineering", demandPercent: 65, evidence: "콜 요약/제안서 초안 생성 자동화" },
-      { skill: "No-Code Automation", demandPercent: 61, evidence: "CRM 태스크 자동화" },
-      { skill: "Consulting", demandPercent: 58, evidence: "고객 과제 파악 및 솔루션 제안" }
+      { skill: "Strategic Planning", demandPercent: 90, evidence: "분기/연간 성장 전략 설계" },
+      { skill: "Data Analysis", demandPercent: 86, evidence: "성장 실험·지표 해석" },
+      { skill: "Digital Marketing", demandPercent: 82, evidence: "획득 채널 운영/고도화" },
+      { skill: "Project Management", demandPercent: 78, evidence: "실행 체계·우선순위 운영" },
+      { skill: "Leadership", demandPercent: 76, evidence: "크로스펑셔널 팀 리딩" }
     ],
-    toolStack: ["CRM(Salesforce/HubSpot)", "LLM 기반 세일즈 어시스트", "자동화 툴"],
-    outcomeMetrics: ["리드 응답 시간 단축", "영업 생산성 향상", "매출 전환율 개선"],
-    linkedinEvidence: ["Edward Jones", "Premera Blue Cross", "Humana"]
+    toolStack: ["GA/Amplitude", "SQL/BI", "자동화 워크플로", "LLM 코파일럿"],
+    outcomeMetrics: ["ARR 성장", "리텐션 개선", "실험 속도 향상"],
+    linkedinEvidence: ["Stripe", "Notion", "HubSpot"]
   },
   {
-    name: "AI Talent Ops Partner",
-    evolutionFrom: "기존 직무: HR/채용/인사운영",
-    salaryBand: "7천~1.4억+",
-    neededSkills: ["Leadership", "Prompt Engineering", "No-Code Automation", "Project Management", "Stakeholder Communication"],
-    boostStrengths: ["Developer", "Empathy", "Responsibility", "Connectedness", "Harmony"],
-    boostMbti: ["ENFJ", "INFJ", "ESFJ", "ISFJ"],
+    name: "AI Transformation Lead",
+    evolutionFrom: "기존 직무: 전략/운영/PM 조직 리드",
+    salaryBand: "1.4억~2.9억+",
+    seniorityPreference: "senior",
+    neededSkills: ["Leadership", "Change Management", "Strategic Planning", "No-Code Automation", "Stakeholder Communication"],
+    boostStrengths: ["Activator", "Learner", "Analytical", "Command", "Strategic"],
+    boostMbti: ["ENTJ", "ENFJ", "INTJ", "ESTJ"],
     hiringSignals: [
-      "채용/온보딩 프로세스 개선 프로젝트 경험",
-      "JD 작성, 스크리닝, 인터뷰 요약 자동화 도입 경험",
-      "윤리/개인정보/편향 이슈를 고려한 운영 역량"
+      "조직 단위 AI 전환 로드맵 수립 및 실행 경험",
+      "업무 표준화/자동화로 운영 생산성 개선 성과",
+      "현업 저항을 낮춘 변화관리 커뮤니케이션 역량"
     ],
     demandSignals: [
-      { skill: "Stakeholder Communication", demandPercent: 81, evidence: "현업 리더/면접관과 채용 운영 조율" },
-      { skill: "Project Management", demandPercent: 74, evidence: "채용/온보딩 프로세스 운영" },
-      { skill: "Leadership", demandPercent: 62, evidence: "프로세스 개선/변화관리 리드" },
-      { skill: "Prompt Engineering", demandPercent: 59, evidence: "JD/인터뷰 노트 자동화 품질 제어" },
-      { skill: "No-Code Automation", demandPercent: 56, evidence: "ATS/HRIS 워크플로 자동화" }
+      { skill: "Leadership", demandPercent: 88, evidence: "전사 전환 프로그램 리딩" },
+      { skill: "Change Management", demandPercent: 84, evidence: "조직 도입·정착 운영" },
+      { skill: "No-Code Automation", demandPercent: 80, evidence: "반복 업무 자동화 구조화" },
+      { skill: "Strategic Planning", demandPercent: 78, evidence: "중장기 로드맵·성과관리" },
+      { skill: "Stakeholder Communication", demandPercent: 76, evidence: "경영진/현업 정렬" }
     ],
-    toolStack: ["ATS", "HRIS", "LLM 요약/문서도구", "워크플로 자동화"],
-    outcomeMetrics: ["채용 리드타임 단축", "면접 운영 품질 향상", "온보딩 완료율 증가"],
-    linkedinEvidence: ["AWS", "Amazon", "Humana"]
+    toolStack: ["Process Mining", "Automation Suite", "BI Dashboard", "LLM Assistants"],
+    outcomeMetrics: ["운영비 절감", "처리시간 단축", "도입 정착률 상승"],
+    linkedinEvidence: ["Accenture", "Deloitte", "Microsoft"]
   },
   {
-    name: "AI Business Ops Analyst",
-    evolutionFrom: "기존 직무: 기획/운영/전략/재무 분석",
-    salaryBand: "8천~1.6억+",
-    neededSkills: ["SQL", "Excel", "Power BI", "Operations", "No-Code Automation"],
-    boostStrengths: ["Analytical", "Discipline", "Focus", "Responsibility", "Context"],
-    boostMbti: ["ISTJ", "ESTJ", "INTJ", "ENTJ"],
+    name: "Revenue Strategy Lead",
+    evolutionFrom: "기존 직무: 영업기획/재무/전략기획",
+    salaryBand: "1.3억~2.6억+",
+    seniorityPreference: "mid",
+    neededSkills: ["Financial Analysis", "Strategic Planning", "Stakeholder Communication", "Operations", "Data Analysis"],
+    boostStrengths: ["Analytical", "Input", "Responsibility", "Strategic", "Focus"],
+    boostMbti: ["INTJ", "ISTJ", "ENTJ", "ESTJ"],
     hiringSignals: [
-      "운영 KPI 설계 및 대시보드 고도화 경험",
-      "반복 보고/정산/분류 업무 자동화 경험",
-      "AI 도입 전후 생산성/품질 지표를 측정한 경험"
+      "매출·비용·이익 지표를 연결한 전략 설계 경험",
+      "조직별 KPI 정렬 및 성과관리 운영 경험",
+      "리포팅 자동화와 경영 의사결정 지원 경험"
     ],
     demandSignals: [
-      { skill: "Operations", demandPercent: 79, evidence: "운영 프로세스 구조화/개선" },
-      { skill: "SQL", demandPercent: 73, evidence: "운영 데이터 분석" },
-      { skill: "Excel", demandPercent: 71, evidence: "실무 리포팅/모델링" },
-      { skill: "Power BI", demandPercent: 64, evidence: "KPI 대시보드 구축" },
-      { skill: "No-Code Automation", demandPercent: 60, evidence: "반복 태스크 자동화" }
+      { skill: "Financial Analysis", demandPercent: 87, evidence: "수익성 기반 전략 도출" },
+      { skill: "Strategic Planning", demandPercent: 83, evidence: "성장/수익 계획 수립" },
+      { skill: "Data Analysis", demandPercent: 79, evidence: "지표 인사이트 도출" },
+      { skill: "Operations", demandPercent: 76, evidence: "실행 체계 최적화" },
+      { skill: "Stakeholder Communication", demandPercent: 74, evidence: "경영진/현업 의사결정 지원" }
     ],
-    toolStack: ["SQL/BI", "Spreadsheet", "RPA/Automation", "LLM 분석 보조"],
-    outcomeMetrics: ["운영 비용 절감", "리포트 리드타임 단축", "의사결정 속도 향상"],
-    linkedinEvidence: ["Prime Video", "Amazon", "GetInsured"]
+    toolStack: ["FP&A 모델", "SQL/BI", "자동화 리포팅", "LLM 분석 보조"],
+    outcomeMetrics: ["매출총이익 개선", "예측 정확도 향상", "의사결정 리드타임 단축"],
+    linkedinEvidence: ["Salesforce", "Adobe", "Atlassian"]
   }
 ];
 
@@ -332,6 +345,12 @@ function t(key, vars = {}) {
   const dict = I18N[lang] || I18N.ko;
   const template = dict[key] ?? I18N.ko[key] ?? key;
   return template.replace(/\{(\w+)\}/g, (_, token) => String(vars[token] ?? ""));
+}
+
+function getStrengthLabel(strengthValue) {
+  const item = CLIFTON_STRENGTHS.find((strength) => strength.value === strengthValue);
+  if (!item) return strengthValue;
+  return getCurrentLanguage() === "en" ? item.en : item.ko;
 }
 
 function populateCareerYearOptions() {
@@ -480,6 +499,36 @@ function collectSkills() {
     .filter(Boolean);
 }
 
+function evaluateExperienceSignal(profile) {
+  const years = Number.isFinite(profile.careerYearsValue) ? profile.careerYearsValue : 0;
+  const careerText = profile.careerText || "";
+  const currentRole = profile.currentRole || "";
+  const combined = `${careerText}\n${currentRole}`;
+
+  const leadershipMatches = combined.match(/리드|lead|head|director|manager|총괄|팀장|실장|본부장|임원/gi) || [];
+  const metricMatches = combined.match(/\d+(\.\d+)?\s?(%|퍼센트|배|억|만|k|m|b|건|명|원)/gi) || [];
+  const companyMatches = combined.match(/[A-Z][A-Za-z0-9&.\-]{2,}\s?(Inc|Corp|Ltd|Co|Group)?|[가-힣A-Za-z0-9]+(전자|그룹|은행|카드|증권|보험|테크|테크놀로지|코리아|컴퍼니)/g) || [];
+
+  const yearPoints = Math.min(28, Math.round(years * 1.6));
+  const leadershipPoints = Math.min(16, leadershipMatches.length * 4);
+  const metricPoints = Math.min(16, metricMatches.length * 4);
+  const companyPoints = Math.min(12, companyMatches.length * 3);
+
+  const total = yearPoints + leadershipPoints + metricPoints + companyPoints;
+  const level = years >= 12 || leadershipMatches.length >= 2 ? "senior" : years >= 6 ? "mid" : "junior";
+
+  return {
+    years,
+    level,
+    points: total,
+    signals: {
+      leadershipHits: leadershipMatches.length,
+      metricHits: metricMatches.length,
+      companyHits: companyMatches.length
+    }
+  };
+}
+
 function calculateRoleAnalysis(profile, role) {
   const skillWeight = { low: 1, mid: 2, high: 3 };
   const userSkillMap = new Map(profile.skills.map((s) => [s.name, s.level]));
@@ -499,9 +548,13 @@ function calculateRoleAnalysis(profile, role) {
 
   const matchedStrengths = profile.strengths.filter((s) => role.boostStrengths.includes(s));
   const matchedMbti = profile.mbti.filter((m) => role.boostMbti.includes(m));
+  const experienceSignal = evaluateExperienceSignal(profile);
   const strengthPoints = matchedStrengths.length * 7;
   const mbtiPoints = matchedMbti.length * 6;
-  const experiencePoints = profile.careerText.length > 120 ? 8 : 0;
+  const seniorityFitBonus =
+    role.seniorityPreference === experienceSignal.level ? 10 :
+    role.seniorityPreference === "senior" && experienceSignal.level === "mid" ? 5 : 0;
+  const experiencePoints = Math.min(60, experienceSignal.points + seniorityFitBonus);
   const score = skillPoints + strengthPoints + mbtiPoints + experiencePoints;
 
   return {
@@ -516,7 +569,8 @@ function calculateRoleAnalysis(profile, role) {
     missingSkills,
     matchedStrengths,
     matchedMbti,
-    skillCoverage: Math.round((matchedSkills.length / role.neededSkills.length) * 100)
+    skillCoverage: Math.round((matchedSkills.length / role.neededSkills.length) * 100),
+    experienceSignal
   };
 }
 
@@ -529,10 +583,11 @@ function buildEvolutionResult(profile) {
     .sort((a, b) => b.score - a.score);
 
   const top = scored[0];
+  const experienceSignal = top.analysis.experienceSignal;
   const missingSkills = top.analysis.missingSkills;
   const upgradeSkills = top.analysis.matchedSkills.filter((s) => s.level !== "high").map((s) => s.name);
   const focusSkills = [...new Set([...missingSkills, ...upgradeSkills])].slice(0, 5);
-  const normalizedScore = Math.min(100, Math.round((top.score / 175) * 100));
+  const normalizedScore = Math.min(100, Math.round((top.score / SCORE_NORMALIZER) * 100));
   const readinessTier = normalizedScore >= 70 ? "상" : normalizedScore >= 45 ? "중" : "하";
   const confidence = profile.mbti.length + profile.strengths.length + profile.skills.length >= 6 ? "높음" : "보통";
   const userSkillMap = new Map(profile.skills.map((s) => [s.name, s.level]));
@@ -560,42 +615,78 @@ function buildEvolutionResult(profile) {
     )
     : 0;
 
-  const immediateActions = [
-    `이번 주 안에 ${firstGap} 학습 3시간 + 실습 결과물 1개 업로드`,
-    `${secondGap} 관련 미니 프로젝트를 ${top.name} 직무 관점으로 1개 설계`,
-    "성과지표 템플릿 작성(시간 절감, 품질 개선, 비용 절감 중 1개 이상)",
-    profile.careerText.length < 120
-      ? "경력 설명을 STAR 구조(상황-과제-행동-결과)로 500자 이상 보강"
-      : "현재 경력 설명에서 정량 성과 문장 3개를 추출해 이력서 상단에 배치",
-    weaknessKeyword ? weaknessKeyword.plan : "주간 회고 30분을 고정하고 다음 주 1개 목표만 설정"
-  ];
+  const isSeniorTrack = experienceSignal.level === "senior" || experienceSignal.years >= 12;
+  const immediateActions = isSeniorTrack
+    ? [
+      `${top.name} 기준 12개월 전략 맵 작성 (North Star + 3대 핵심 KPI)`,
+      `${firstGap}, ${secondGap} 중심으로 업무 자동화 파이프라인 2개 설계`,
+      "리더십/조직 실행 모델: 의사결정 권한-지표-운영 리듬(Rhythm) 재정의",
+      "이력서/프로필에 기업명 + 정량 성과(%, 억, 건) 5개를 임팩트 문장으로 전면 배치",
+      weaknessKeyword ? weaknessKeyword.plan : "월간 전략 리뷰 미팅(60분)과 주간 실행 점검(30분) 운영"
+    ]
+    : [
+      `이번 주 안에 ${firstGap} 학습 3시간 + 실습 결과물 1개 업로드`,
+      `${secondGap} 관련 미니 프로젝트를 ${top.name} 직무 관점으로 1개 설계`,
+      "성과지표 템플릿 작성(시간 절감, 품질 개선, 비용 절감 중 1개 이상)",
+      profile.careerText.length < 120
+        ? "경력 설명을 STAR 구조(상황-과제-행동-결과)로 500자 이상 보강"
+        : "현재 경력 설명에서 정량 성과 문장 3개를 추출해 이력서 상단에 배치",
+      weaknessKeyword ? weaknessKeyword.plan : "주간 회고 30분을 고정하고 다음 주 1개 목표만 설정"
+    ];
 
-  const quests = [
-    {
-      phase: "Phase 1 (0~4주): 기반 구축",
-      tasks: [
-        `핵심 역량 2개 집중: ${firstGap}, ${secondGap}`,
-        "직무 맞춤 학습 루틴 고정(주 5시간 이상)",
-        "작은 자동화 프로젝트 1개 배포 + 결과 지표 1개 기록"
-      ]
-    },
-    {
-      phase: "Phase 2 (5~8주): 실무 전환",
-      tasks: [
-        `${top.name} 포지션 기준으로 실무형 문제 1개 선정`,
-        "문제정의-접근방법-결과를 포함한 케이스 스터디 1건 작성",
-        "성과 지표(시간 절감/매출 기여/정확도 향상)를 수치로 명시"
-      ]
-    },
-    {
-      phase: "Phase 3 (9~12주): 고단가 포지셔닝",
-      tasks: [
-        "목표 직무 맞춤 이력서/링크드인 리브랜딩",
-        "채용 공고 20개 역분석 후 반복 요구 역량 3개 집중 보완",
-        "모의 인터뷰 6회 + 제안서형 포트폴리오 완성"
-      ]
-    }
-  ];
+  const quests = isSeniorTrack
+    ? [
+      {
+        phase: "Phase 1 (0~4주): 전략 설계",
+        tasks: [
+          `목표 직무(${top.name}) 기준 성장/수익 구조와 리스크 맵 정의`,
+          "핵심 KPI Tree 및 의사결정 기준(Guardrail) 문서화",
+          "경영진 리뷰용 1페이지 전략 메모 완성"
+        ]
+      },
+      {
+        phase: "Phase 2 (5~8주): 시스템 자동화",
+        tasks: [
+          "지표 수집-해석-보고 자동화 파이프라인 구축",
+          "반복 운영 업무 3개 이상 자동화 및 리드타임 30% 절감",
+          "팀 운영 리듬(주간/월간)과 실행 대시보드 정착"
+        ]
+      },
+      {
+        phase: "Phase 3 (9~12주): 조직 확장",
+        tasks: [
+          "전사 협업 체계(RACI) 재설계 및 운영 표준 배포",
+          "신규 성장 시나리오 2개를 실험 포트폴리오로 운영",
+          "성과 리뷰에서 다음 분기 투자 우선순위 제안"
+        ]
+      }
+    ]
+    : [
+      {
+        phase: "Phase 1 (0~4주): 기반 구축",
+        tasks: [
+          `핵심 역량 2개 집중: ${firstGap}, ${secondGap}`,
+          "직무 맞춤 학습 루틴 고정(주 5시간 이상)",
+          "작은 자동화 프로젝트 1개 배포 + 결과 지표 1개 기록"
+        ]
+      },
+      {
+        phase: "Phase 2 (5~8주): 실무 전환",
+        tasks: [
+          `${top.name} 포지션 기준으로 실무형 문제 1개 선정`,
+          "문제정의-접근방법-결과를 포함한 케이스 스터디 1건 작성",
+          "성과 지표(시간 절감/매출 기여/정확도 향상)를 수치로 명시"
+        ]
+      },
+      {
+        phase: "Phase 3 (9~12주): 고단가 포지셔닝",
+        tasks: [
+          "목표 직무 맞춤 이력서/링크드인 리브랜딩",
+          "채용 공고 20개 역분석 후 반복 요구 역량 3개 집중 보완",
+          "모의 인터뷰 6회 + 제안서형 포트폴리오 완성"
+        ]
+      }
+    ];
 
   const weaknessText = profile.weaknessText.toLowerCase();
   const motivation = WEAKNESS_ROUTINES
@@ -605,6 +696,10 @@ function buildEvolutionResult(profile) {
     motivation.push("- 주간 목표를 1개로 축소하고, 매주 금요일 성과 회고 30분을 고정하세요.");
     motivation.push("- 매월 공개 결과물 1개를 만들어 성취 루프를 끊기지 않게 설계하세요.");
   }
+
+  const strengthReasonSummary = profile.strengths
+    .filter((strength) => Boolean(STRENGTH_REASON_MAP[strength]))
+    .map((strength) => `${getStrengthLabel(strength)}: ${STRENGTH_REASON_MAP[strength]}`);
 
   return {
     topRole: top,
@@ -623,7 +718,9 @@ function buildEvolutionResult(profile) {
     immediateActions,
     focusSkills,
     quests,
-    motivation
+    motivation,
+    strengthReasonSummary,
+    experienceSignal
   };
 }
 
@@ -672,7 +769,7 @@ function renderReport(profile, result) {
     { label: "필수 스킬", value: breakdown.skillPoints, max: 120 },
     { label: "강점 시너지", value: breakdown.strengthPoints, max: 35 },
     { label: "MBTI 적합", value: breakdown.mbtiPoints, max: 12 },
-    { label: "경력 서술", value: breakdown.experiencePoints, max: 8 }
+    { label: "경력/성과 근거", value: breakdown.experiencePoints, max: 60 }
   ].map((item) => ({
     ...item,
     percent: Math.min(100, Math.round((item.value / item.max) * 100))
@@ -687,6 +784,7 @@ function renderReport(profile, result) {
         <p class="mini-label">AI Career Evolution Report</p>
         <h3>추천 포지션: ${result.topRole.name}</h3>
         <p>${profileSummary ? `<b>${profileSummary}</b> 정보를 기준으로 ` : ""}${result.topRole.evolutionFrom} 기반 진화 경로를 분석했습니다. 예상 연봉 밴드: <b>${result.topRole.salaryBand}</b></p>
+        <p><small>경력 신호: ${result.experienceSignal.years}년차 · 기업 언급 ${result.experienceSignal.signals.companyHits}회 · 정량 성과 ${result.experienceSignal.signals.metricHits}건 · 리더십 표현 ${result.experienceSignal.signals.leadershipHits}회</small></p>
       </div>
 
       <div class="kpi-grid">
@@ -759,7 +857,7 @@ function renderReport(profile, result) {
                 <span>${result.topRole.name}</span>
                 <b>${result.topRole.score}점</b>
               </div>
-              <div class="bar-track"><div class="bar-fill" style="width:${Math.min(100, Math.round((result.topRole.score / 175) * 100))}%"></div></div>
+              <div class="bar-track"><div class="bar-fill" style="width:${Math.min(100, Math.round((result.topRole.score / SCORE_NORMALIZER) * 100))}%"></div></div>
             </div>
             ${result.alternatives.map((item) => `
               <div class="bar-row">
@@ -767,7 +865,7 @@ function renderReport(profile, result) {
                   <span>${item.name}</span>
                   <b>${item.score}점</b>
                 </div>
-                <div class="bar-track"><div class="bar-fill bar-fill--soft" style="width:${Math.min(100, Math.round((item.score / 175) * 100))}%"></div></div>
+                <div class="bar-track"><div class="bar-fill bar-fill--soft" style="width:${Math.min(100, Math.round((item.score / SCORE_NORMALIZER) * 100))}%"></div></div>
                 <small>1순위 대비 -${item.gapFromTop}점</small>
               </div>
             `).join("")}
@@ -783,6 +881,16 @@ function renderReport(profile, result) {
         <p><strong>현업 도구:</strong> ${result.topRole.toolStack.join(", ")}</p>
         <p><strong>중요 KPI:</strong> ${result.topRole.outcomeMetrics.join(", ")}</p>
         <p><strong>유사 채용 기업:</strong> ${result.topRole.linkedinEvidence.join(", ")}</p>
+      </div>
+
+      <div class="report-block">
+        <strong>강점 기반 추천 사유</strong>
+        <ul>
+          ${(result.strengthReasonSummary.length
+            ? result.strengthReasonSummary
+            : ["핵심 강점 5개(배움, 수집, 행동, 분석, 발상)를 선택하면 직무 추천 근거가 더 구체화됩니다."])
+            .map((item) => `<li>${item}</li>`).join("")}
+        </ul>
       </div>
 
       <div class="report-block">
@@ -835,6 +943,7 @@ form.addEventListener("submit", async (event) => {
     const profile = {
       currentRole: document.getElementById("current-role").value.trim(),
       careerYears: document.getElementById("career-years").selectedOptions[0]?.textContent?.trim() || "",
+      careerYearsValue: Number(document.getElementById("career-years").value || 0),
       mbti: collectSelected("mbti"),
       strengths: collectSelected("strength"),
       careerText: document.getElementById("career-text").value.trim(),
