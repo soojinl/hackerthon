@@ -761,16 +761,61 @@ function detectCurrentRoleDomain(currentRole) {
   return best.score > 0 ? best.domain : "unknown";
 }
 
+function extractRoleKeywordBuckets(role) {
+  const textParts = [
+    role.name || "",
+    role.evolutionFrom || "",
+    ...(role.hiringSignals || []),
+    ...((role.demandSignals || []).flatMap((item) => [item.skill || "", item.evidence || ""])),
+    ...(role.neededSkills || []),
+    ...((role.relevanceKeywords || []))
+  ];
+
+  const splitTokens = textParts
+    .join(" ")
+    .toLowerCase()
+    .split(/[^a-z0-9가-힣+#&.-]+/)
+    .map((token) => token.trim())
+    .filter(Boolean);
+
+  const stopwords = new Set([
+    "and", "or", "the", "for", "with", "to", "of", "in", "on", "by", "a", "an",
+    "기반", "경험", "역량", "설계", "전략", "관리", "운영", "데이터", "조직", "프로세스"
+  ]);
+
+  const allKeywords = [...new Set(
+    splitTokens.filter((token) => token.length > 1 && !GENERIC_KEYWORDS.has(token) && !stopwords.has(token))
+  )];
+  const titleKeywords = [...new Set(
+    (role.name || "")
+      .toLowerCase()
+      .split(/[^a-z0-9가-힣+#&.-]+/)
+      .map((token) => token.trim())
+      .filter((token) => token.length > 1 && !stopwords.has(token))
+  )];
+  const criticalKeywords = [...new Set(
+    [
+      ...((role.neededSkills || []).map((skill) => (skill || "").toLowerCase())),
+      ...((role.demandSignals || []).map((item) => (item.skill || "").toLowerCase()))
+    ]
+      .flatMap((text) => text.split(/[^a-z0-9가-힣+#&.-]+/))
+      .map((token) => token.trim())
+      .filter((token) => token.length > 1 && !stopwords.has(token))
+  )];
+
+  return { allKeywords, titleKeywords, criticalKeywords };
+}
+
 function calculateRoleRelevance(profile, role) {
   const currentRoleText = (profile.currentRole || "").toLowerCase();
   const careerText = (profile.careerText || "").toLowerCase();
-  const keywords = (role.relevanceKeywords || [])
-    .map((keyword) => keyword.toLowerCase())
-    .filter((keyword) => keyword.length > 1 && !GENERIC_KEYWORDS.has(keyword));
-  const currentRoleHits = [...new Set(keywords.filter((keyword) => keyword && currentRoleText.includes(keyword)))];
-  const careerHits = [...new Set(keywords.filter((keyword) => keyword && careerText.includes(keyword)))];
+  const { allKeywords, titleKeywords, criticalKeywords } = extractRoleKeywordBuckets(role);
+  const currentRoleHits = [...new Set(allKeywords.filter((keyword) => keyword && currentRoleText.includes(keyword)))];
+  const careerHits = [...new Set(allKeywords.filter((keyword) => keyword && careerText.includes(keyword)))];
+  const titleHits = [...new Set(titleKeywords.filter((keyword) => keyword && (currentRoleText.includes(keyword) || careerText.includes(keyword))))];
+  const criticalHits = [...new Set(criticalKeywords.filter((keyword) => keyword && (currentRoleText.includes(keyword) || careerText.includes(keyword))))];
   const uniqueHits = [...new Set([...currentRoleHits, ...careerHits])];
-  const points = Math.min(60, currentRoleHits.length * 14 + careerHits.length * 4);
+  const points = Math.min(92, currentRoleHits.length * 14 + careerHits.length * 4 + titleHits.length * 10 + criticalHits.length * 8);
   const hasCurrentRoleInput = (profile.currentRole || "").trim().length > 0;
   const mismatchPenalty = hasCurrentRoleInput && currentRoleHits.length === 0 ? 42 : 0;
   const matchBonus = hasCurrentRoleInput && currentRoleHits.length > 0 ? 12 : 0;
@@ -795,7 +840,9 @@ function calculateRoleRelevance(profile, role) {
     hits: uniqueHits,
     currentRoleHits,
     careerHits,
-    currentRoleDomain
+    currentRoleDomain,
+    titleHits,
+    criticalHits
   };
 }
 
