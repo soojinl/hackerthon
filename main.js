@@ -131,7 +131,8 @@ const WEAKNESS_ROUTINES = [
 const MARKET_SIGNALS = [
   "WEF Future of Jobs 2025: 2030년까지 전 세계 직무의 약 22%가 재편되고, 순고용은 +78M(신규 170M/감소 92M) 전망.",
   "MGI Skill Shift: 고급 디지털/기술 스킬 수요와 사회정서(소통/리더십) 스킬 수요가 함께 증가.",
-  "OpenAI GPTs are GPTs: 업무 단위(Task) 자동화 영향이 빠르게 확대되며, 반복 문서/요약/분류 업무부터 전환 압력이 큼."
+  "OpenAI GPTs are GPTs: 업무 단위(Task) 자동화 영향이 빠르게 확대되며, 반복 문서/요약/분류 업무부터 전환 압력이 큼.",
+  "국내 채용 사례(무신사 2026.02.05): 면접 전형에서 Codex 지원 등 AI 도구 활용 문제해결 능력을 실전 평가 항목으로 반영."
 ];
 
 const KNOWLEDGE_SOURCES = {
