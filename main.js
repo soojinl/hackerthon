@@ -18,39 +18,76 @@ const SKILL_OPTIONS = [
   "Python", "JavaScript", "TypeScript", "SQL", "Excel", "Power BI",
   "Machine Learning", "Deep Learning", "Prompt Engineering", "No-Code Automation",
   "Product Management", "UX Research", "Digital Marketing", "Sales", "Consulting",
-  "Cloud", "MLOps", "Data Engineering", "Technical Writing", "Leadership"
+  "Cloud", "MLOps", "Data Engineering", "Technical Writing", "Leadership",
+  "Project Management", "Customer Success", "Operations", "Stakeholder Communication"
 ];
 
 const LEVEL_OPTIONS = ["low", "mid", "high"];
 
 const ROLE_PROFILES = [
   {
-    name: "AI Agent Architect",
-    salaryBand: "1.2억~2.5억+",
-    neededSkills: ["Python", "Prompt Engineering", "Cloud", "MLOps", "Product Management"],
-    boostStrengths: ["Strategic", "Learner", "Analytical", "Ideation", "Achiever"],
-    boostMbti: ["INTJ", "ENTJ", "INTP", "ENTP"]
+    name: "AI Growth Marketing Ops",
+    evolutionFrom: "기존 직무: 퍼포먼스/그로스 마케터",
+    salaryBand: "8천~1.6억+",
+    neededSkills: ["Digital Marketing", "Prompt Engineering", "SQL", "Power BI", "Project Management"],
+    boostStrengths: ["Strategic", "Analytical", "Communication", "Activator", "Achiever"],
+    boostMbti: ["ENTJ", "ENFP", "ESTJ", "ENTP"],
+    hiringSignals: [
+      "캠페인 운영 + 실험(AB Test) 설계 경험",
+      "데이터 기반 예산/성과 최적화 역량",
+      "생성형 AI로 카피/세그먼트/리포트 자동화 경험"
+    ],
+    toolStack: ["GA4/Amplitude", "CRM/Ads Manager", "LLM 툴", "BI 대시보드"],
+    outcomeMetrics: ["CAC 절감", "전환율 개선", "실험 속도 증가"],
+    linkedinEvidence: ["Amazon", "Tivity Health", "GetInsured"]
   },
   {
-    name: "AI Product Strategist",
-    salaryBand: "1.0억~2.0억+",
-    neededSkills: ["Product Management", "Prompt Engineering", "Data Engineering", "Leadership", "UX Research"],
-    boostStrengths: ["Futuristic", "Communication", "Strategic", "Relator", "Maximizer"],
-    boostMbti: ["ENFJ", "ENTJ", "ENFP", "INFJ"]
+    name: "AI Sales Enablement Manager",
+    evolutionFrom: "기존 직무: 영업기획/세일즈 오퍼레이션",
+    salaryBand: "8천~1.5억+",
+    neededSkills: ["Sales", "Prompt Engineering", "No-Code Automation", "Consulting", "Stakeholder Communication"],
+    boostStrengths: ["Woo", "Communication", "Activator", "Relator", "Arranger"],
+    boostMbti: ["ENTP", "ENFJ", "ESTP", "ENTJ"],
+    hiringSignals: [
+      "영업 파이프라인 분석 및 우선순위 운영 경험",
+      "콜 요약/제안서 초안/CRM 업데이트 자동화 경험",
+      "현업 조직(영업-마케팅-CS)과의 협업 리딩 역량"
+    ],
+    toolStack: ["CRM(Salesforce/HubSpot)", "LLM 기반 세일즈 어시스트", "자동화 툴"],
+    outcomeMetrics: ["리드 응답 시간 단축", "영업 생산성 향상", "매출 전환율 개선"],
+    linkedinEvidence: ["Edward Jones", "Premera Blue Cross", "Humana"]
   },
   {
-    name: "AI Workflow Automation Consultant",
-    salaryBand: "9천~1.8억+",
-    neededSkills: ["No-Code Automation", "Python", "Sales", "Consulting", "Prompt Engineering"],
-    boostStrengths: ["Activator", "Communication", "Woo", "Restorative", "Arranger"],
-    boostMbti: ["ENTP", "ENFP", "ESTP", "ENTJ"]
+    name: "AI Talent Ops Partner",
+    evolutionFrom: "기존 직무: HR/채용/인사운영",
+    salaryBand: "7천~1.4억+",
+    neededSkills: ["Leadership", "Prompt Engineering", "No-Code Automation", "Project Management", "Stakeholder Communication"],
+    boostStrengths: ["Developer", "Empathy", "Responsibility", "Connectedness", "Harmony"],
+    boostMbti: ["ENFJ", "INFJ", "ESFJ", "ISFJ"],
+    hiringSignals: [
+      "채용/온보딩 프로세스 개선 프로젝트 경험",
+      "JD 작성, 스크리닝, 인터뷰 요약 자동화 도입 경험",
+      "윤리/개인정보/편향 이슈를 고려한 운영 역량"
+    ],
+    toolStack: ["ATS", "HRIS", "LLM 요약/문서도구", "워크플로 자동화"],
+    outcomeMetrics: ["채용 리드타임 단축", "면접 운영 품질 향상", "온보딩 완료율 증가"],
+    linkedinEvidence: ["AWS", "Amazon", "Humana"]
   },
   {
-    name: "AI Transformation PM",
-    salaryBand: "9천~1.7억+",
-    neededSkills: ["Leadership", "Product Management", "SQL", "Power BI", "Consulting"],
-    boostStrengths: ["Responsibility", "Focus", "Discipline", "Developer", "Connectedness"],
-    boostMbti: ["ESTJ", "ENFJ", "ISTJ", "ENTJ"]
+    name: "AI Business Ops Analyst",
+    evolutionFrom: "기존 직무: 기획/운영/전략/재무 분석",
+    salaryBand: "8천~1.6억+",
+    neededSkills: ["SQL", "Excel", "Power BI", "Operations", "No-Code Automation"],
+    boostStrengths: ["Analytical", "Discipline", "Focus", "Responsibility", "Context"],
+    boostMbti: ["ISTJ", "ESTJ", "INTJ", "ENTJ"],
+    hiringSignals: [
+      "운영 KPI 설계 및 대시보드 고도화 경험",
+      "반복 보고/정산/분류 업무 자동화 경험",
+      "AI 도입 전후 생산성/품질 지표를 측정한 경험"
+    ],
+    toolStack: ["SQL/BI", "Spreadsheet", "RPA/Automation", "LLM 분석 보조"],
+    outcomeMetrics: ["운영 비용 절감", "리포트 리드타임 단축", "의사결정 속도 향상"],
+    linkedinEvidence: ["Prime Video", "Amazon", "GetInsured"]
   }
 ];
 
@@ -131,60 +168,98 @@ function collectSkills() {
   }));
 }
 
-function calculateRoleScore(profile, role) {
+function calculateRoleAnalysis(profile, role) {
   const skillWeight = { low: 1, mid: 2, high: 3 };
-  let score = 0;
   const userSkillMap = new Map(profile.skills.map((s) => [s.name, s.level]));
+  const matchedSkills = [];
+  const missingSkills = [];
+  let skillPoints = 0;
 
   role.neededSkills.forEach((skill) => {
     const level = userSkillMap.get(skill);
-    if (level) score += skillWeight[level] * 8;
+    if (level) {
+      matchedSkills.push({ name: skill, level });
+      skillPoints += skillWeight[level] * 8;
+    } else {
+      missingSkills.push(skill);
+    }
   });
 
-  profile.strengths.forEach((s) => {
-    if (role.boostStrengths.includes(s)) score += 7;
-  });
+  const matchedStrengths = profile.strengths.filter((s) => role.boostStrengths.includes(s));
+  const matchedMbti = profile.mbti.filter((m) => role.boostMbti.includes(m));
+  const strengthPoints = matchedStrengths.length * 7;
+  const mbtiPoints = matchedMbti.length * 6;
+  const experiencePoints = profile.careerText.length > 120 ? 8 : 0;
+  const score = skillPoints + strengthPoints + mbtiPoints + experiencePoints;
 
-  profile.mbti.forEach((m) => {
-    if (role.boostMbti.includes(m)) score += 6;
-  });
-
-  if (profile.careerText.length > 120) score += 8;
-  return score;
+  return {
+    score,
+    scoreBreakdown: {
+      skillPoints,
+      strengthPoints,
+      mbtiPoints,
+      experiencePoints
+    },
+    matchedSkills,
+    missingSkills,
+    matchedStrengths,
+    matchedMbti,
+    skillCoverage: Math.round((matchedSkills.length / role.neededSkills.length) * 100)
+  };
 }
 
 function buildEvolutionResult(profile) {
   const scored = ROLE_PROFILES
-    .map((role) => ({ ...role, score: calculateRoleScore(profile, role) }))
+    .map((role) => {
+      const analysis = calculateRoleAnalysis(profile, role);
+      return { ...role, score: analysis.score, analysis };
+    })
     .sort((a, b) => b.score - a.score);
 
   const top = scored[0];
-  const missingSkills = top.neededSkills.filter((skill) => !profile.skills.some((s) => s.name === skill));
-  const mediumSkills = profile.skills.filter((s) => s.level !== "high").map((s) => s.name);
-  const focusSkills = [...new Set([...missingSkills, ...mediumSkills])].slice(0, 5);
+  const missingSkills = top.analysis.missingSkills;
+  const upgradeSkills = top.analysis.matchedSkills.filter((s) => s.level !== "high").map((s) => s.name);
+  const focusSkills = [...new Set([...missingSkills, ...upgradeSkills])].slice(0, 5);
+  const normalizedScore = Math.min(100, Math.round((top.score / 175) * 100));
+  const readinessTier = normalizedScore >= 70 ? "상" : normalizedScore >= 45 ? "중" : "하";
+  const confidence = profile.mbti.length + profile.strengths.length + profile.skills.length >= 6 ? "높음" : "보통";
+
+  const firstGap = focusSkills[0] || "Python";
+  const secondGap = focusSkills[1] || "Prompt Engineering";
+  const weaknessKeyword = WEAKNESS_ROUTINES.find((r) => profile.weaknessText.toLowerCase().includes(r.keyword));
+
+  const immediateActions = [
+    `이번 주 안에 ${firstGap} 학습 3시간 + 실습 결과물 1개 업로드`,
+    `${secondGap} 관련 미니 프로젝트를 ${top.name} 직무 관점으로 1개 설계`,
+    "성과지표 템플릿 작성(시간 절감, 품질 개선, 비용 절감 중 1개 이상)",
+    profile.careerText.length < 120
+      ? "경력 설명을 STAR 구조(상황-과제-행동-결과)로 500자 이상 보강"
+      : "현재 경력 설명에서 정량 성과 문장 3개를 추출해 이력서 상단에 배치",
+    weaknessKeyword ? weaknessKeyword.plan : "주간 회고 30분을 고정하고 다음 주 1개 목표만 설정"
+  ];
 
   const quests = [
     {
       phase: "Phase 1 (0~4주): 기반 구축",
       tasks: [
-        "AI/자동화 기본기 집중 학습(주 5시간)",
-        `핵심 역량 2개 선택: ${focusSkills.slice(0, 2).join(", ") || "Python, Prompt Engineering"}`,
-        "작은 자동화 프로젝트 1개 배포"
+        `핵심 역량 2개 집중: ${firstGap}, ${secondGap}`,
+        "직무 맞춤 학습 루틴 고정(주 5시간 이상)",
+        "작은 자동화 프로젝트 1개 배포 + 결과 지표 1개 기록"
       ]
     },
     {
       phase: "Phase 2 (5~8주): 실무 전환",
       tasks: [
-        "업무형 데이터/문제 1개 선정 후 AI 솔루션 설계",
-        "포트폴리오용 케이스 스터디 작성",
-        "성과 지표(시간 절감/매출 기여) 수치화"
+        `${top.name} 포지션 기준으로 실무형 문제 1개 선정`,
+        "문제정의-접근방법-결과를 포함한 케이스 스터디 1건 작성",
+        "성과 지표(시간 절감/매출 기여/정확도 향상)를 수치로 명시"
       ]
     },
     {
       phase: "Phase 3 (9~12주): 고단가 포지셔닝",
       tasks: [
         "목표 직무 맞춤 이력서/링크드인 리브랜딩",
-        "고단가 채용 공고 20개 역분석 후 역량 보완",
+        "채용 공고 20개 역분석 후 반복 요구 역량 3개 집중 보완",
         "모의 인터뷰 6회 + 제안서형 포트폴리오 완성"
       ]
     }
@@ -201,7 +276,17 @@ function buildEvolutionResult(profile) {
 
   return {
     topRole: top,
-    alternatives: scored.slice(1, 3),
+    alternatives: scored.slice(1, 3).map((role) => ({
+      name: role.name,
+      evolutionFrom: role.evolutionFrom,
+      salaryBand: role.salaryBand,
+      score: role.score,
+      gapFromTop: top.score - role.score
+    })),
+    readinessTier,
+    normalizedScore,
+    confidence,
+    immediateActions,
     focusSkills,
     quests,
     motivation
@@ -215,23 +300,58 @@ function renderReport(profile, result) {
     <div class="report-block">
       <h3>${profile.name || "사용자"} 님의 커리어 진화 리포트</h3>
       <p><strong>추천 신직업:</strong> ${result.topRole.name} (예상 연봉 밴드: ${result.topRole.salaryBand})</p>
-      <p><strong>매칭 점수:</strong> ${result.topRole.score}점</p>
-      <p><strong>근거:</strong> MBTI(${profile.mbti.join(", ") || "미선택"}), 강점(${profile.strengths.join(", ") || "미선택"}), 보유 스킬 기반 매칭</p>
+      <p><strong>직무 진화 기준:</strong> ${result.topRole.evolutionFrom}</p>
+      <p><strong>매칭 점수:</strong> ${result.topRole.score}점 / 준비도 ${result.normalizedScore}점(${result.readinessTier})</p>
+      <p><strong>분석 신뢰도:</strong> ${result.confidence} (입력 데이터 기반)</p>
+      <p><strong>핵심 근거:</strong> MBTI(${profile.mbti.join(", ") || "미선택"}), 강점(${profile.strengths.join(", ") || "미선택"}), 보유 스킬 기반 매칭</p>
+    </div>
+    <div class="report-block">
+      <strong>점수 분해</strong>
+      <ul>
+        <li>필수 스킬 점수: ${result.topRole.analysis.scoreBreakdown.skillPoints}점 (충족률 ${result.topRole.analysis.skillCoverage}%)</li>
+        <li>강점 시너지 점수: ${result.topRole.analysis.scoreBreakdown.strengthPoints}점</li>
+        <li>MBTI 적합 점수: ${result.topRole.analysis.scoreBreakdown.mbtiPoints}점</li>
+        <li>경력 서술 점수: ${result.topRole.analysis.scoreBreakdown.experiencePoints}점</li>
+      </ul>
+    </div>
+    <div class="report-block">
+      <strong>직무 적합도 디테일</strong>
+      <ul>
+        <li>이미 보유한 핵심 스킬: ${(result.topRole.analysis.matchedSkills.map((s) => `${s.name}(${s.level})`).join(", ") || "없음")}</li>
+        <li>부족한 핵심 스킬: ${(result.topRole.analysis.missingSkills.join(", ") || "없음")}</li>
+        <li>활용 가능한 강점: ${(result.topRole.analysis.matchedStrengths.join(", ") || "없음")}</li>
+        <li>유리한 MBTI 포인트: ${(result.topRole.analysis.matchedMbti.join(", ") || "없음")}</li>
+      </ul>
+    </div>
+    <div class="report-block">
+      <strong>LinkedIn 채용 시그널 (실제 공고 패턴 반영)</strong>
+      <ul>
+        ${result.topRole.hiringSignals.map((signal) => `<li>${signal}</li>`).join("")}
+      </ul>
+      <p><strong>현업 도구 스택:</strong> ${result.topRole.toolStack.join(", ")}</p>
+      <p><strong>기업이 보는 성과지표:</strong> ${result.topRole.outcomeMetrics.join(", ")}</p>
+      <p><strong>유사 채용 기업 예시:</strong> ${result.topRole.linkedinEvidence.join(", ")}</p>
     </div>
     <div class="report-block">
       <strong>대안 직무</strong>
       <ul>
-        ${result.alternatives.map((a) => `<li>${a.name} (${a.salaryBand})</li>`).join("")}
+        ${result.alternatives.map((a) => `<li>${a.name} - ${a.evolutionFrom} (${a.salaryBand}, ${a.score}점, 1순위 대비 -${a.gapFromTop}점)</li>`).join("")}
       </ul>
     </div>
     <div class="report-block">
-      <strong>스킬 갭 분석 (우선 강화 스킬)</strong>
+      <strong>즉시 실행 액션 (이번 주 시작)</strong>
+      <ul>
+        ${result.immediateActions.map((action) => `<li>${action}</li>`).join("")}
+      </ul>
+    </div>
+    <div class="report-block">
+      <strong>스킬 갭 분석 (우선 강화 순서)</strong>
       <ul>
         ${(result.focusSkills.length ? result.focusSkills : ["Python", "Prompt Engineering"]).map((s) => `<li>${s}</li>`).join("")}
       </ul>
     </div>
     <div class="report-block">
-      <strong>진화 퀘스트 (학습 + 실무 프로젝트)</strong>
+      <strong>30/60/90일 진화 퀘스트</strong>
       ${result.quests.map((q) => `
         <p><b>${q.phase}</b></p>
         <ul>${q.tasks.map((t) => `<li>${t}</li>`).join("")}</ul>
