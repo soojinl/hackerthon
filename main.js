@@ -417,6 +417,7 @@ function renderReport(profile, result) {
 
   reportPanel.classList.remove("hidden");
   reportNode.classList.remove("empty");
+  reportNode.classList.remove("report-animate");
   reportNode.innerHTML = `
     <div class="report-layout">
       <div class="report-hero-block">
@@ -552,6 +553,10 @@ function renderReport(profile, result) {
       </div>
     </div>
   `;
+
+  requestAnimationFrame(() => {
+    reportNode.classList.add("report-animate");
+  });
 }
 
 addSkillBtn.addEventListener("click", () => createSkillRow());
