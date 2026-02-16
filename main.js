@@ -37,6 +37,13 @@ const ROLE_PROFILES = [
       "데이터 기반 예산/성과 최적화 역량",
       "생성형 AI로 카피/세그먼트/리포트 자동화 경험"
     ],
+    demandSignals: [
+      { skill: "Digital Marketing", demandPercent: 82, evidence: "캠페인 운영/그로스 실험 주도" },
+      { skill: "SQL", demandPercent: 71, evidence: "성과 분석 및 세그먼트 쿼리" },
+      { skill: "Power BI", demandPercent: 63, evidence: "대시보드 리포팅/성과 가시화" },
+      { skill: "Prompt Engineering", demandPercent: 69, evidence: "카피/요약/실험 아이디어 자동화" },
+      { skill: "Project Management", demandPercent: 57, evidence: "캠페인 운영 일정/협업 관리" }
+    ],
     toolStack: ["GA4/Amplitude", "CRM/Ads Manager", "LLM 툴", "BI 대시보드"],
     outcomeMetrics: ["CAC 절감", "전환율 개선", "실험 속도 증가"],
     linkedinEvidence: ["Amazon", "Tivity Health", "GetInsured"]
@@ -52,6 +59,13 @@ const ROLE_PROFILES = [
       "영업 파이프라인 분석 및 우선순위 운영 경험",
       "콜 요약/제안서 초안/CRM 업데이트 자동화 경험",
       "현업 조직(영업-마케팅-CS)과의 협업 리딩 역량"
+    ],
+    demandSignals: [
+      { skill: "Sales", demandPercent: 84, evidence: "파이프라인/딜 운영 경험" },
+      { skill: "Stakeholder Communication", demandPercent: 77, evidence: "영업-마케팅-제품 간 조율" },
+      { skill: "Prompt Engineering", demandPercent: 65, evidence: "콜 요약/제안서 초안 생성 자동화" },
+      { skill: "No-Code Automation", demandPercent: 61, evidence: "CRM 태스크 자동화" },
+      { skill: "Consulting", demandPercent: 58, evidence: "고객 과제 파악 및 솔루션 제안" }
     ],
     toolStack: ["CRM(Salesforce/HubSpot)", "LLM 기반 세일즈 어시스트", "자동화 툴"],
     outcomeMetrics: ["리드 응답 시간 단축", "영업 생산성 향상", "매출 전환율 개선"],
@@ -69,6 +83,13 @@ const ROLE_PROFILES = [
       "JD 작성, 스크리닝, 인터뷰 요약 자동화 도입 경험",
       "윤리/개인정보/편향 이슈를 고려한 운영 역량"
     ],
+    demandSignals: [
+      { skill: "Stakeholder Communication", demandPercent: 81, evidence: "현업 리더/면접관과 채용 운영 조율" },
+      { skill: "Project Management", demandPercent: 74, evidence: "채용/온보딩 프로세스 운영" },
+      { skill: "Leadership", demandPercent: 62, evidence: "프로세스 개선/변화관리 리드" },
+      { skill: "Prompt Engineering", demandPercent: 59, evidence: "JD/인터뷰 노트 자동화 품질 제어" },
+      { skill: "No-Code Automation", demandPercent: 56, evidence: "ATS/HRIS 워크플로 자동화" }
+    ],
     toolStack: ["ATS", "HRIS", "LLM 요약/문서도구", "워크플로 자동화"],
     outcomeMetrics: ["채용 리드타임 단축", "면접 운영 품질 향상", "온보딩 완료율 증가"],
     linkedinEvidence: ["AWS", "Amazon", "Humana"]
@@ -84,6 +105,13 @@ const ROLE_PROFILES = [
       "운영 KPI 설계 및 대시보드 고도화 경험",
       "반복 보고/정산/분류 업무 자동화 경험",
       "AI 도입 전후 생산성/품질 지표를 측정한 경험"
+    ],
+    demandSignals: [
+      { skill: "Operations", demandPercent: 79, evidence: "운영 프로세스 구조화/개선" },
+      { skill: "SQL", demandPercent: 73, evidence: "운영 데이터 분석" },
+      { skill: "Excel", demandPercent: 71, evidence: "실무 리포팅/모델링" },
+      { skill: "Power BI", demandPercent: 64, evidence: "KPI 대시보드 구축" },
+      { skill: "No-Code Automation", demandPercent: 60, evidence: "반복 태스크 자동화" }
     ],
     toolStack: ["SQL/BI", "Spreadsheet", "RPA/Automation", "LLM 분석 보조"],
     outcomeMetrics: ["운영 비용 절감", "리포트 리드타임 단축", "의사결정 속도 향상"],
@@ -223,10 +251,30 @@ function buildEvolutionResult(profile) {
   const normalizedScore = Math.min(100, Math.round((top.score / 175) * 100));
   const readinessTier = normalizedScore >= 70 ? "상" : normalizedScore >= 45 ? "중" : "하";
   const confidence = profile.mbti.length + profile.strengths.length + profile.skills.length >= 6 ? "높음" : "보통";
+  const userSkillMap = new Map(profile.skills.map((s) => [s.name, s.level]));
 
   const firstGap = focusSkills[0] || "Python";
   const secondGap = focusSkills[1] || "Prompt Engineering";
   const weaknessKeyword = WEAKNESS_ROUTINES.find((r) => profile.weaknessText.toLowerCase().includes(r.keyword));
+  const demandSignals = (top.demandSignals || [])
+    .map((signal) => {
+      const level = userSkillMap.get(signal.skill) || null;
+      const levelWeight = level === "high" ? 1 : level === "mid" ? 0.7 : level === "low" ? 0.4 : 0;
+      const readiness = Math.round(signal.demandPercent * levelWeight);
+      return {
+        ...signal,
+        level,
+        readiness,
+        status: level ? (level === "high" ? "충족" : "보완 필요") : "미보유"
+      };
+    })
+    .sort((a, b) => b.demandPercent - a.demandPercent);
+  const weightedDemandReadiness = demandSignals.length
+    ? Math.round(
+      demandSignals.reduce((sum, item) => sum + item.readiness, 0) /
+      demandSignals.reduce((sum, item) => sum + item.demandPercent, 0) * 100
+    )
+    : 0;
 
   const immediateActions = [
     `이번 주 안에 ${firstGap} 학습 3시간 + 실습 결과물 1개 업로드`,
@@ -286,6 +334,8 @@ function buildEvolutionResult(profile) {
     readinessTier,
     normalizedScore,
     confidence,
+    weightedDemandReadiness,
+    demandSignals,
     immediateActions,
     focusSkills,
     quests,
@@ -302,6 +352,7 @@ function renderReport(profile, result) {
       <p><strong>추천 신직업:</strong> ${result.topRole.name} (예상 연봉 밴드: ${result.topRole.salaryBand})</p>
       <p><strong>직무 진화 기준:</strong> ${result.topRole.evolutionFrom}</p>
       <p><strong>매칭 점수:</strong> ${result.topRole.score}점 / 준비도 ${result.normalizedScore}점(${result.readinessTier})</p>
+      <p><strong>채용요건 충족도:</strong> ${result.weightedDemandReadiness}% (요구조건 빈도 가중)</p>
       <p><strong>분석 신뢰도:</strong> ${result.confidence} (입력 데이터 기반)</p>
       <p><strong>핵심 근거:</strong> MBTI(${profile.mbti.join(", ") || "미선택"}), 강점(${profile.strengths.join(", ") || "미선택"}), 보유 스킬 기반 매칭</p>
     </div>
@@ -331,6 +382,12 @@ function renderReport(profile, result) {
       <p><strong>현업 도구 스택:</strong> ${result.topRole.toolStack.join(", ")}</p>
       <p><strong>기업이 보는 성과지표:</strong> ${result.topRole.outcomeMetrics.join(", ")}</p>
       <p><strong>유사 채용 기업 예시:</strong> ${result.topRole.linkedinEvidence.join(", ")}</p>
+    </div>
+    <div class="report-block">
+      <strong>LinkedIn 요구조건 빈도 기반 우선순위</strong>
+      <ul>
+        ${result.demandSignals.map((item) => `<li>${item.skill} - 공고 등장 빈도 ${item.demandPercent}% / 내 상태: ${item.status}${item.level ? `(${item.level})` : ""}<br><small>${item.evidence}</small></li>`).join("")}
+      </ul>
     </div>
     <div class="report-block">
       <strong>대안 직무</strong>
