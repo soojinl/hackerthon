@@ -836,6 +836,19 @@ function buildEvolutionResult(profile) {
     )
     : 0;
 
+  const roleGapSignals = demandSignals
+    .filter((item) => item.status !== "충족")
+    .slice(0, 4);
+  const knowledgeToLearn = roleGapSignals.length
+    ? roleGapSignals.map((item) => `${item.skill}: ${item.evidence}를 다룰 수 있는 실무 수준까지 강화`)
+    : [`${top.name} 핵심 역량을 유지/고도화하기 위한 고급 자동화·전략 역량 심화`];
+  const experiencesToBuild = [
+    `현재 직무에서 ${top.name} 관점의 파일럿 프로젝트 1건을 설계하고 KPI를 사전에 정의`,
+    `프로젝트 결과를 정량 성과(증가율·절감율·리드타임)로 문서화해 포트폴리오화`,
+    `${(top.hiringSignals || [])[0] || "핵심 채용 시그널"}을 증명할 수 있는 사례를 이력서 상단에 배치`,
+    `의사결정 구조(가설-실험-검증-확장)를 재사용 가능한 운영 프로세스로 정착`
+  ];
+
   const isSeniorTrack = experienceSignal.level === "senior" || experienceSignal.years >= 12;
   const immediateActions = isSeniorTrack
     ? [
@@ -936,6 +949,9 @@ function buildEvolutionResult(profile) {
     confidence,
     weightedDemandReadiness,
     demandSignals,
+    roleGapSignals,
+    knowledgeToLearn,
+    experiencesToBuild,
     immediateActions,
     focusSkills,
     quests,
@@ -1036,23 +1052,14 @@ function renderReport(profile, result) {
 
       <div class="report-block">
         <strong>3. 연봉 점프를 위한 '진화 퀘스트' (Action Plan)</strong>
-        ${result.quests.map((q) => `
-          <div class="chart-card">
-            <p><b>${q.phase}</b></p>
-            <ul>${q.tasks.map((t) => `<li>${t}</li>`).join("")}</ul>
-          </div>
-        `).join("")}
-      </div>
-
-      <div class="report-block">
-        <strong>강점 데이터 기반 추천 사유</strong>
-        <ul>
-          ${(result.strengthReasonSummary.length
-            ? result.strengthReasonSummary
-            : ["핵심 강점 5개(배움, 수집, 행동, 분석, 발상)를 선택하면 직무 추천 근거가 더 구체화됩니다."])
-            .map((item) => `<li>${item}</li>`).join("")}
-        </ul>
-        <p><strong>유사 채용 기업:</strong> ${result.topRole.linkedinEvidence.join(", ")}</p>
+        <div class="chart-card">
+          <p><b>추천 직업과 현재 경력 간의 차이를 채우기 위해 알아야 할 것</b></p>
+          <ul>${result.knowledgeToLearn.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
+        <div class="chart-card">
+          <p><b>추천 직업과 현재 경력 간의 차이를 채우기 위해 쌓아야 할 경험</b></p>
+          <ul>${result.experiencesToBuild.map((item) => `<li>${item}</li>`).join("")}</ul>
+        </div>
       </div>
     </div>
   `;
