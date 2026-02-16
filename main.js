@@ -553,9 +553,12 @@ function isSubmitReady() {
   const mbtiReady = collectSelected("mbti").length > 0;
   const strengthsReady = collectSelected("strength").length > 0;
   const careerTextReady = document.getElementById("career-text").value.trim().length > 0;
+  const careerFileReady = document.getElementById("career-file").files.length > 0;
+  const careerUrlReady = document.getElementById("career-url").value.trim().length > 0;
+  const careerReady = careerTextReady || careerFileReady || careerUrlReady;
   const skillsReady = collectSkills().length > 0;
 
-  return currentRoleReady && careerYearsReady && mbtiReady && strengthsReady && careerTextReady && skillsReady;
+  return currentRoleReady && careerYearsReady && mbtiReady && strengthsReady && careerReady && skillsReady;
 }
 
 function updateSubmitState() {
