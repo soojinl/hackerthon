@@ -353,6 +353,59 @@ function getStrengthLabel(strengthValue) {
   return getCurrentLanguage() === "en" ? item.en : item.ko;
 }
 
+function extractProfileName(profile) {
+  const source = `${profile.currentRole || ""}\n${profile.careerText || ""}`;
+  const koreanName = source.match(/([가-힣]{2,4})\s*(님|매니저|리드|팀장|실장|이사|부장)/);
+  if (koreanName) return koreanName[1];
+  return "질문자";
+}
+
+function extractBackgroundCompanies(profile) {
+  const text = `${profile.careerText || ""}\n${profile.currentRole || ""}`;
+  const raw = text.match(/[A-Z][A-Za-z0-9&.\-]{2,}|[가-힣A-Za-z0-9]+(전자|그룹|은행|카드|증권|보험|테크|코리아|컴퍼니|닷컴|마트|슈퍼|롭스)/g) || [];
+  const cleaned = raw
+    .map((c) => c.replace(/[()\[\],]/g, "").trim())
+    .filter((c) => c.length >= 2);
+  return [...new Set(cleaned)].slice(0, 5);
+}
+
+function buildPersonaSummary(profile) {
+  const topStrengths = profile.strengths.slice(0, 5).map(getStrengthLabel);
+  const hasStrategicSet = ["Learner", "Input", "Activator", "Analytical", "Ideation"]
+    .every((s) => profile.strengths.includes(s));
+  const persona = hasStrategicSet ? "전략적 탐구자" : "데이터 기반 실행가";
+
+  return {
+    topStrengths,
+    persona,
+    mbti: profile.mbti.join(", ") || "미입력"
+  };
+}
+
+function getRoleNarrative(roleName, profile, result) {
+  const firstGap = result.focusSkills[0] || "Strategic Planning";
+  const secondGap = result.focusSkills[1] || "Data Analysis";
+
+  if (roleName === "Tokenomics Architect") {
+    return {
+      whyFit: "포인트/리워드/CRM 설계 경험은 토큰 기반 인센티브 구조 설계와 직접적으로 연결됩니다. 여기에 AI 자동화를 결합하면 단순 운영이 아닌 성장형 로열티 시스템 설계 역할로 확장할 수 있습니다.",
+      value: `정량 성과와 자동화 역량을 결합해 LTV/CAC 구조를 재설계하는 포지션입니다. 특히 ${firstGap} 역량을 강화하면 기업의 수익 구조 설계자로서 가치가 급상승합니다.`
+    };
+  }
+
+  if (roleName === "Growth Lead") {
+    return {
+      whyFit: "AARRR, CRM, 리텐션 최적화 경험은 AI 기반 프로덕트 그로스의 핵심 역량과 일치합니다. 데이터 해석과 실험 설계 경험이 있으면 MVP-리텐션-확장 사이클을 리드할 수 있습니다.",
+      value: `단순 캠페인 운영이 아니라 성장 로직 자체를 설계하는 역할입니다. ${secondGap} 중심 자동화까지 연결되면 고액 연봉+스톡옵션 포지션으로 이동 가능성이 커집니다.`
+    };
+  }
+
+  return {
+    whyFit: "현재 경력의 전략·실행·데이터 역량이 고부가가치 리드 포지션과 정합됩니다.",
+    value: "성과 지표와 자동화 시스템을 함께 구축할 수 있는 인재로 포지셔닝할 수 있습니다."
+  };
+}
+
 function populateCareerYearOptions() {
   const selected = careerYearsSelect.value;
   const options = [`<option value="">${t("years_default")}</option>`, `<option value="0">${t("years_entry")}</option>`];
@@ -763,164 +816,74 @@ function showLoadingState() {
 }
 
 function renderReport(profile, result) {
-  const breakdown = result.topRole.analysis.scoreBreakdown;
-  const profileSummary = [profile.currentRole, profile.careerYears].filter(Boolean).join(" · ");
-  const chartItems = [
-    { label: "필수 스킬", value: breakdown.skillPoints, max: 120 },
-    { label: "강점 시너지", value: breakdown.strengthPoints, max: 35 },
-    { label: "MBTI 적합", value: breakdown.mbtiPoints, max: 12 },
-    { label: "경력/성과 근거", value: breakdown.experiencePoints, max: 60 }
-  ].map((item) => ({
-    ...item,
-    percent: Math.min(100, Math.round((item.value / item.max) * 100))
-  }));
+  const name = extractProfileName(profile);
+  const persona = buildPersonaSummary(profile);
+  const topTwoRoles = [result.topRole, ...(result.alternatives || []).slice(0, 1)];
+  const backgroundCompanies = extractBackgroundCompanies(profile);
+  const companiesText = backgroundCompanies.length ? backgroundCompanies.join(", ") : "입력 경력 기반";
 
   reportPanel.classList.remove("hidden");
   reportNode.classList.remove("empty");
   reportNode.classList.remove("report-animate");
   reportNode.innerHTML = `
-    <div class="report-layout">
-      <div class="report-hero-block">
-        <p class="mini-label">AI Career Evolution Report</p>
-        <h3>추천 포지션: ${result.topRole.name}</h3>
-        <p>${profileSummary ? `<b>${profileSummary}</b> 정보를 기준으로 ` : ""}${result.topRole.evolutionFrom} 기반 진화 경로를 분석했습니다. 예상 연봉 밴드: <b>${result.topRole.salaryBand}</b></p>
-        <p><small>경력 신호: ${result.experienceSignal.years}년차 · 기업 언급 ${result.experienceSignal.signals.companyHits}회 · 정량 성과 ${result.experienceSignal.signals.metricHits}건 · 리더십 표현 ${result.experienceSignal.signals.leadershipHits}회</small></p>
+    <div class="report-layout report-narrative">
+      <div class="report-hero-block report-hero-strong">
+        <p class="mini-label">Hyper-Growth Career Evolution Report</p>
+        <h3>🚀 하이퍼-그로우: ${name} 님 커리어 진화 보고서</h3>
+        <div class="kpi-grid">
+          <div class="kpi-card"><p>준비도 점수</p><strong>${result.normalizedScore}점</strong></div>
+          <div class="kpi-card"><p>채용요건 충족도</p><strong>${result.weightedDemandReadiness}%</strong></div>
+          <div class="kpi-card"><p>직무 매칭 점수</p><strong>${result.topRole.score}점</strong></div>
+        </div>
       </div>
 
       <div class="kpi-grid">
         <div class="kpi-card">
-          <p>준비도 점수</p>
-          <strong>${result.normalizedScore}점</strong>
-          <span>${result.readinessTier} 단계</span>
-        </div>
-        <div class="kpi-card">
-          <p>채용요건 충족도</p>
-          <strong>${result.weightedDemandReadiness}%</strong>
-          <span>빈도 가중 기준</span>
-        </div>
-        <div class="kpi-card">
-          <p>직무 매칭 점수</p>
-          <strong>${result.topRole.score}점</strong>
-          <span>분석 신뢰도 ${result.confidence}</span>
-        </div>
-      </div>
-
-      <div class="charts-grid">
-        <div class="chart-card">
-          <h4>종합 지표 도넛</h4>
-          <div class="donut-grid">
-            <div class="donut" style="--value:${result.normalizedScore}">
-              <div><span>준비도</span><b>${result.normalizedScore}%</b></div>
-            </div>
-            <div class="donut donut--mint" style="--value:${result.weightedDemandReadiness}">
-              <div><span>요건 충족</span><b>${result.weightedDemandReadiness}%</b></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <h4>점수 구성 차트</h4>
-          <div class="bars">
-            ${chartItems.map((item) => `
-              <div class="bar-row">
-                <div class="bar-head">
-                  <span>${item.label}</span>
-                  <b>${item.value}점</b>
-                </div>
-                <div class="bar-track"><div class="bar-fill" style="width:${item.percent}%"></div></div>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <h4>요구조건 빈도 Top 5</h4>
-          <div class="bars">
-            ${result.demandSignals.map((item) => `
-              <div class="bar-row">
-                <div class="bar-head">
-                  <span>${item.skill}</span>
-                  <b>${item.demandPercent}%</b>
-                </div>
-                <div class="bar-track"><div class="bar-fill bar-fill--alt" style="width:${item.demandPercent}%"></div></div>
-                <small>${item.status}${item.level ? `(${item.level})` : ""} · ${item.evidence}</small>
-              </div>
-            `).join("")}
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <h4>대안 직무 비교</h4>
-          <div class="bars">
-            <div class="bar-row">
-              <div class="bar-head">
-                <span>${result.topRole.name}</span>
-                <b>${result.topRole.score}점</b>
-              </div>
-              <div class="bar-track"><div class="bar-fill" style="width:${Math.min(100, Math.round((result.topRole.score / SCORE_NORMALIZER) * 100))}%"></div></div>
-            </div>
-            ${result.alternatives.map((item) => `
-              <div class="bar-row">
-                <div class="bar-head">
-                  <span>${item.name}</span>
-                  <b>${item.score}점</b>
-                </div>
-                <div class="bar-track"><div class="bar-fill bar-fill--soft" style="width:${Math.min(100, Math.round((item.score / SCORE_NORMALIZER) * 100))}%"></div></div>
-                <small>1순위 대비 -${item.gapFromTop}점</small>
-              </div>
-            `).join("")}
-          </div>
+          <p>1. 당신의 3대 핵심 DNA 조합 분석</p>
+          <p><strong>강점(Top 5):</strong> ${persona.topStrengths.join(", ")} (${persona.persona}형)</p>
+          <p><strong>성격(MBTI):</strong> ${persona.mbti}</p>
+          <p><strong>백그라운드:</strong> ${companiesText}까지 이어진 경력 흐름</p>
+          <p class="hint">경력 신호: ${result.experienceSignal.years}년차 · 기업 언급 ${result.experienceSignal.signals.companyHits}회 · 정량 성과 ${result.experienceSignal.signals.metricHits}건 · 리더십 표현 ${result.experienceSignal.signals.leadershipHits}회</p>
+          <p><strong>[종합 진단]</strong> 단순 운영형 인재가 아니라, 데이터를 통해 기회를 포착하고 전략을 실행으로 전환하는 시니어 성장 설계자 유형입니다.</p>
         </div>
       </div>
 
       <div class="report-block">
-        <strong>LinkedIn 채용 시그널</strong>
-        <ul>
-          ${result.topRole.hiringSignals.map((signal) => `<li>${signal}</li>`).join("")}
-        </ul>
-        <p><strong>현업 도구:</strong> ${result.topRole.toolStack.join(", ")}</p>
-        <p><strong>중요 KPI:</strong> ${result.topRole.outcomeMetrics.join(", ")}</p>
-        <p><strong>유사 채용 기업:</strong> ${result.topRole.linkedinEvidence.join(", ")}</p>
+        <strong>2. 2027년, 연봉 성장에 유리한 '신인류 직무' 추천</strong>
+        ${topTwoRoles.map((role, idx) => {
+          const narrative = getRoleNarrative(role.name, profile, result);
+          const prefix = idx === 0 ? "①" : "②";
+          return `
+            <div class="chart-card">
+              <h4>${prefix} ${role.name}</h4>
+              <p><strong>왜 적합한가?</strong> ${narrative.whyFit}</p>
+              <p><strong>수익 가치:</strong> ${narrative.value}</p>
+              <p><strong>연봉 밴드:</strong> ${role.salaryBand}</p>
+              <p><strong>핵심 채용 시그널:</strong> ${(role.hiringSignals || []).join(" / ")}</p>
+            </div>
+          `;
+        }).join("")}
       </div>
 
       <div class="report-block">
-        <strong>강점 기반 추천 사유</strong>
+        <strong>3. 연봉 점프를 위한 '진화 퀘스트' (Action Plan)</strong>
+        ${result.quests.map((q) => `
+          <div class="chart-card">
+            <p><b>${q.phase}</b></p>
+            <ul>${q.tasks.map((t) => `<li>${t}</li>`).join("")}</ul>
+          </div>
+        `).join("")}
+      </div>
+
+      <div class="report-block">
+        <strong>강점 데이터 기반 추천 사유</strong>
         <ul>
           ${(result.strengthReasonSummary.length
             ? result.strengthReasonSummary
             : ["핵심 강점 5개(배움, 수집, 행동, 분석, 발상)를 선택하면 직무 추천 근거가 더 구체화됩니다."])
             .map((item) => `<li>${item}</li>`).join("")}
         </ul>
-      </div>
-
-      <div class="report-block">
-        <strong>즉시 실행 액션 (이번 주)</strong>
-        <ul>
-          ${result.immediateActions.map((action) => `<li>${action}</li>`).join("")}
-        </ul>
-      </div>
-
-      <div class="report-block">
-        <strong>30/60/90일 진화 퀘스트</strong>
-        ${result.quests.map((q) => `
-          <p><b>${q.phase}</b></p>
-          <ul>${q.tasks.map((t) => `<li>${t}</li>`).join("")}</ul>
-        `).join("")}
-      </div>
-
-      <div class="report-block">
-        <strong>시장 변화 인사이트</strong>
-        <ul>${MARKET_SIGNALS.map((signal) => `<li>${signal}</li>`).join("")}</ul>
-      </div>
-
-      <div class="report-block">
-        <strong>학습/리서치 소스</strong>
-        <p><b>글로벌 트렌드</b></p>
-        <ul>${KNOWLEDGE_SOURCES.globalTrends.map((item) => `<li>${item}</li>`).join("")}</ul>
-        <p><b>실무 스택</b></p>
-        <ul>${KNOWLEDGE_SOURCES.practicalStack.map((item) => `<li>${item}</li>`).join("")}</ul>
-        <p><b>학술/커뮤니티</b></p>
-        <ul>${KNOWLEDGE_SOURCES.researchAndCommunity.map((item) => `<li>${item}</li>`).join("")}</ul>
+        <p><strong>유사 채용 기업:</strong> ${result.topRole.linkedinEvidence.join(", ")}</p>
       </div>
     </div>
   `;
