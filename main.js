@@ -547,6 +547,24 @@ function setSelectionHint(hintNode, count, max) {
   hintNode.textContent = t("hint_selected", { count, max });
 }
 
+function isSubmitReady() {
+  const currentRoleReady = document.getElementById("current-role").value.trim().length > 0;
+  const careerYearsReady = document.getElementById("career-years").value !== "";
+  const mbtiReady = collectSelected("mbti").length > 0;
+  const strengthsReady = collectSelected("strength").length > 0;
+  const careerTextReady = document.getElementById("career-text").value.trim().length > 0;
+  const skillsReady = collectSkills().length > 0;
+
+  return currentRoleReady && careerYearsReady && mbtiReady && strengthsReady && careerTextReady && skillsReady;
+}
+
+function updateSubmitState() {
+  if (form.dataset.loading === "true") return;
+  const ready = isSubmitReady();
+  submitBtn.disabled = !ready;
+  submitBtn.classList.toggle("btn--ready", ready);
+}
+
 function applyLanguage(lang) {
   document.documentElement.lang = lang;
   langButtons.forEach((btn) => {
@@ -575,6 +593,7 @@ function applyLanguage(lang) {
       createSkillRow(item.selectedSkill, item.level);
     }
   });
+  updateSubmitState();
 }
 
 function renderChips(items, container, name, maxCount, hintNode, selectedValues = []) {
@@ -599,20 +618,23 @@ function renderChips(items, container, name, maxCount, hintNode, selectedValues 
       if (checked.length > maxCount) {
         input.checked = false;
         hintNode.classList.add("error");
-        hintNode.textContent = t("hint_limit", { max: maxCount });
-        setTimeout(() => {
-          hintNode.classList.remove("error");
-          setSelectionHint(hintNode, container.querySelectorAll("input:checked").length, maxCount);
-        }, 1000);
-      }
+      hintNode.textContent = t("hint_limit", { max: maxCount });
+      setTimeout(() => {
+        hintNode.classList.remove("error");
+        setSelectionHint(hintNode, container.querySelectorAll("input:checked").length, maxCount);
+        updateSubmitState();
+      }, 1000);
+    }
       container.querySelectorAll(".chip").forEach((chip) => {
         chip.classList.toggle("active", chip.querySelector("input").checked);
       });
       setSelectionHint(hintNode, container.querySelectorAll("input:checked").length, maxCount);
+      updateSubmitState();
     });
     container.appendChild(label);
   });
   setSelectionHint(hintNode, container.querySelectorAll("input:checked").length, maxCount);
+  updateSubmitState();
 }
 
 function createSkillRow(skill = "", level = "mid", forceCustom = false) {
@@ -635,6 +657,7 @@ function createSkillRow(skill = "", level = "mid", forceCustom = false) {
   `;
 
   const nameSelect = row.querySelector(".skill-name");
+  const levelSelect = row.querySelector(".skill-level");
   const customInput = row.querySelector(".skill-custom");
   customInput.value = customSkill;
 
@@ -642,12 +665,17 @@ function createSkillRow(skill = "", level = "mid", forceCustom = false) {
     const isCustom = nameSelect.value === CUSTOM_SKILL_VALUE;
     customInput.classList.toggle("hidden", !isCustom);
     if (isCustom) customInput.focus();
+    updateSubmitState();
   });
+  levelSelect.addEventListener("change", updateSubmitState);
+  customInput.addEventListener("input", updateSubmitState);
 
   row.querySelector(".remove-skill").addEventListener("click", () => {
     row.remove();
+    updateSubmitState();
   });
   skillsWrap.appendChild(row);
+  updateSubmitState();
 }
 
 function collectSelected(name) {
@@ -1063,13 +1091,15 @@ form.addEventListener("submit", async (event) => {
     renderReport(profile, result);
   } finally {
     form.dataset.loading = "false";
-    submitBtn.disabled = false;
     submitBtn.textContent = t("btn_submit");
+    updateSubmitState();
   }
 });
 
 createSkillRow("Communication", "mid");
 createSkillRow("Project Management", "mid");
+form.addEventListener("input", updateSubmitState);
+form.addEventListener("change", updateSubmitState);
 langButtons.forEach((button) => {
   button.addEventListener("click", () => applyLanguage(button.dataset.lang));
 });

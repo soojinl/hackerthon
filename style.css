@@ -304,6 +304,11 @@ textarea {
   box-shadow: 0 10px 16px -12px rgba(255, 142, 158, 0.75);
 }
 
+.btn.btn--ready {
+  background: linear-gradient(130deg, #e9486a 0%, #b14cff 100%);
+  box-shadow: 0 12px 18px -12px rgba(128, 52, 173, 0.75);
+}
+
 .btn:disabled {
   opacity: 0.65;
   cursor: not-allowed;
