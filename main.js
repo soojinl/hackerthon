@@ -111,6 +111,65 @@ const STRENGTH_REASON_MAP = {
   Ideation: "발상 강점으로 차별화된 성장 시나리오와 신규 BM 아이디어를 설계할 수 있습니다."
 };
 
+const FUTURE_ROLE_EVOLUTIONS = [
+  {
+    sector: "마케팅/이커머스",
+    todayRole: "퍼포먼스 마케터 / CRM 매니저",
+    futureRole: "초개인화 시스템 아키텍트",
+    evolution: "캠페인 실행보다 AI 에이전트 오케스트레이션, 리텐션 알고리즘 설계, 메시지 자동화 루프 구축이 핵심이 됩니다.",
+    bestForKeywords: ["마케팅", "crm", "리텐션", "캠페인", "브랜드", "이커머스", "growth", "퍼포먼스"]
+  },
+  {
+    sector: "금융/재무",
+    todayRole: "재무 담당 / FP&A / 회계",
+    futureRole: "AI ROI 최적화 전략가",
+    evolution: "결산 중심 업무는 자동화되고, 예측 모델 기반 투자·예산·가격 의사결정 설계가 핵심 직무가 됩니다.",
+    bestForKeywords: ["재무", "finance", "fp&a", "회계", "손익", "예산", "pricing", "roi"]
+  },
+  {
+    sector: "IT/프로덕트",
+    todayRole: "개발자 / PM / 서비스기획",
+    futureRole: "AI 시스템 아키텍트 PM",
+    evolution: "코드 작성보다 문제 구조화, 에이전트 워크플로우 설계, 품질·가드레일 운영이 더 큰 가치가 됩니다.",
+    bestForKeywords: ["개발", "product", "pm", "프로덕트", "서비스기획", "mvp", "api", "architecture"]
+  },
+  {
+    sector: "영업/사업개발",
+    todayRole: "영업기획 / AE / BizDev",
+    futureRole: "멀티에이전트 수익운영 설계자",
+    evolution: "리드관리·제안 자동화·가격전략 시뮬레이션을 통합해 수익성과 파이프라인을 동시에 최적화하는 역할로 진화합니다.",
+    bestForKeywords: ["영업", "sales", "revenue", "pipeline", "bizdev", "사업개발", "pricing", "revops"]
+  },
+  {
+    sector: "공급망/운영",
+    todayRole: "물류/SCM/운영기획",
+    futureRole: "AI 공급망 의사결정 설계자",
+    evolution: "재고/수요/납기 예측과 리스크 시나리오를 AI로 운영해 서비스 수준과 비용 효율을 동시에 달성하는 직무가 부상합니다.",
+    bestForKeywords: ["scm", "물류", "공급망", "재고", "구매", "운영", "warehouse", "logistics"]
+  },
+  {
+    sector: "인사/조직",
+    todayRole: "HR/채용/HRBP",
+    futureRole: "AI-인간 협업 조직 디자이너",
+    evolution: "채용 집행보다 AI와 사람의 역할 경계를 설계하고, 조직 생산성 지표를 운영하는 설계형 직무가 핵심이 됩니다.",
+    bestForKeywords: ["hr", "인사", "채용", "온보딩", "people", "talent", "조직", "평가"]
+  },
+  {
+    sector: "법률/리스크",
+    todayRole: "변호사 / 준법 / 컴플라이언스",
+    futureRole: "AI 알고리즘 거버넌스 컨설턴트",
+    evolution: "문서 검토 자동화 이후에는 AI 의사결정의 법적 타당성, 편향, 책임 구조를 설계하는 고부가가치 역할이 확대됩니다.",
+    bestForKeywords: ["법무", "legal", "compliance", "리스크", "규제", "감사", "policy", "governance"]
+  },
+  {
+    sector: "고객경험/서비스",
+    todayRole: "CS/고객성공/서비스운영",
+    futureRole: "Agentic Customer Journey Architect",
+    evolution: "문의 처리 중심에서 벗어나 고객 여정 전반을 AI 기반으로 예측·개입·개선하는 구조 설계 직무로 바뀝니다.",
+    bestForKeywords: ["고객", "cs", "customer", "support", "success", "서비스", "journey", "cx"]
+  }
+];
+
 const ROLE_PROFILES = [
   {
     name: "Tokenized Loyalty Economy Architect",
@@ -470,7 +529,7 @@ function extractProfileName(profile) {
   const source = `${profile.currentRole || ""}\n${profile.careerText || ""}`;
   const koreanName = source.match(/([가-힣]{2,4})\s*(님|매니저|리드|팀장|실장|이사|부장)/);
   if (koreanName) return koreanName[1];
-  return "질문자";
+  return getCurrentLanguage() === "en" ? "Candidate" : "질문자";
 }
 
 function extractBackgroundCompanies(profile) {
@@ -483,23 +542,33 @@ function extractBackgroundCompanies(profile) {
 }
 
 function buildPersonaSummary(profile) {
+  const isEn = getCurrentLanguage() === "en";
   const topStrengths = profile.strengths.slice(0, 5).map(getStrengthLabel);
   const hasStrategicSet = ["Learner", "Input", "Activator", "Analytical", "Ideation"]
     .every((s) => profile.strengths.includes(s));
-  const persona = hasStrategicSet ? "전략적 탐구자" : "데이터 기반 실행가";
+  const persona = hasStrategicSet
+    ? (isEn ? "Strategic Explorer" : "전략적 탐구자")
+    : (isEn ? "Data-Driven Operator" : "데이터 기반 실행가");
 
   return {
     topStrengths,
     persona,
-    mbti: profile.mbti.join(", ") || "미입력"
+    mbti: profile.mbti.join(", ") || (isEn ? "Not provided" : "미입력")
   };
 }
 
 function getRoleNarrative(roleName, profile, result) {
+  const isEn = getCurrentLanguage() === "en";
   const firstGap = result.focusSkills[0] || "Strategic Planning";
   const secondGap = result.focusSkills[1] || "Data Analysis";
 
   if (roleName === "Tokenized Loyalty Economy Architect") {
+    if (isEn) {
+      return {
+        whyFit: "Your points/membership/CRM design experience maps directly to tokenized loyalty-system design. With AI automation, this expands from campaign execution to value-exchange architecture.",
+        value: `This role redesigns LTV/CAC economics through quantified experimentation and automation. Strengthening ${firstGap} can significantly increase your strategic compensation leverage.`
+      };
+    }
     return {
       whyFit: "포인트/멤버십/CRM 설계 경험은 토큰화된 로열티 경제 설계와 직접적으로 연결됩니다. AI 자동화가 결합되면 단순 운영이 아닌 가치 교환 구조 설계자로 확장됩니다.",
       value: `정량 성과와 자동화 역량을 결합해 LTV/CAC 구조를 재설계하는 포지션입니다. 특히 ${firstGap} 역량을 강화하면 기업의 수익 구조 설계자로서 가치가 급상승합니다.`
@@ -507,6 +576,12 @@ function getRoleNarrative(roleName, profile, result) {
   }
 
   if (roleName === "AI Marketing ROI & Forecast Strategist") {
+    if (isEn) {
+      return {
+        whyFit: "Your performance analytics and budget ownership experience align strongly with AI-driven ROI analysis and forecasting roles. Simulation-based decisioning is a direct differentiator.",
+        value: `This is not campaign execution; it is profitability architecture. Advanced ${secondGap} capability can move you into a higher compensation tier quickly.`
+      };
+    }
     return {
       whyFit: "마케팅 성과 분석과 예산 운영 경험은 AI 기반 ROI 분석·예측 직무와 정합성이 높습니다. 특히 시뮬레이션 기반 의사결정 역량이 핵심 경쟁력입니다.",
       value: `캠페인 집행자가 아니라 ROI와 수익성을 설계하는 포지션입니다. ${secondGap} 기반 모델 고도화 역량이 붙으면 보상 레벨이 빠르게 상승합니다.`
@@ -514,6 +589,12 @@ function getRoleNarrative(roleName, profile, result) {
   }
 
   if (roleName === "Multi-Agent Revenue Operations Lead") {
+    if (isEn) {
+      return {
+        whyFit: "Experience connecting operations, marketing, and data flows transfers directly to multi-agent revenue system design.",
+        value: "You transition labor-heavy operations into agentic systems that improve margin and deliver executive-level impact."
+      };
+    }
     return {
       whyFit: "운영/마케팅/데이터 흐름을 연결해본 경험은 멀티 에이전트 기반 수익 운영 체계 설계에 직접 활용됩니다.",
       value: "사람 중심 운영을 AI 에이전트 시스템으로 전환해 마진 개선을 만드는 역할이라 경영진 레벨 임팩트를 만듭니다."
@@ -521,12 +602,24 @@ function getRoleNarrative(roleName, profile, result) {
   }
 
   if (roleName === "Agentic Marketing Systems Architect") {
+    if (isEn) {
+      return {
+        whyFit: "If you can redesign funnel, experimentation, and automation as one system, you can position as an agentic marketing architect.",
+        value: "Professionals who connect messaging-channel-measurement-optimization into one automated loop are hard to replace and command premium compensation."
+      };
+    }
     return {
       whyFit: "퍼널, 실험, 자동화 경험을 시스템 단위로 재설계할 수 있으면 에이전틱 마케팅 구조 설계자로 포지셔닝할 수 있습니다.",
       value: "메시지-채널-측정-최적화를 하나의 자동화 루프로 만든 인재는 대체가 어려워 프리미엄 보상 구간으로 이동합니다."
     };
   }
 
+  if (isEn) {
+    return {
+      whyFit: "Your strategy-execution-data combination aligns with high-value AI-era lead roles.",
+      value: "You can position as a builder who delivers both measurable outcomes and scalable automation systems."
+    };
+  }
   return {
     whyFit: "현재 경력의 전략·실행·데이터 역량이 고부가가치 리드 포지션과 정합됩니다.",
     value: "성과 지표와 자동화 시스템을 함께 구축할 수 있는 인재로 포지셔닝할 수 있습니다."
@@ -894,7 +987,40 @@ function calculateRoleAnalysis(profile, role) {
   };
 }
 
+function getEvolutionDomainFromSector(sector) {
+  const lower = (sector || "").toLowerCase();
+  if (lower.includes("마케팅")) return "marketing";
+  if (lower.includes("금융") || lower.includes("재무")) return "finance";
+  if (lower.includes("영업")) return "sales";
+  if (lower.includes("공급망") || lower.includes("운영")) return "supply";
+  if (lower.includes("인사")) return "hr";
+  if (lower.includes("it") || lower.includes("프로덕트")) return "product";
+  return "unknown";
+}
+
+function buildFutureEvolutionInsights(profile) {
+  const currentRoleDomain = detectCurrentRoleDomain(profile.currentRole);
+  const text = `${profile.currentRole || ""}\n${profile.careerText || ""}`.toLowerCase();
+  const scored = FUTURE_ROLE_EVOLUTIONS.map((item) => {
+    const keywordHits = (item.bestForKeywords || []).filter((keyword) => text.includes((keyword || "").toLowerCase()));
+    const domain = getEvolutionDomainFromSector(item.sector);
+    const domainBonus = currentRoleDomain !== "unknown" && domain === currentRoleDomain ? 10 : 0;
+    const score = keywordHits.length * 6 + domainBonus;
+    return {
+      ...item,
+      keywordHits,
+      score
+    };
+  }).sort((a, b) => b.score - a.score);
+
+  return {
+    recommendations: scored.slice(0, 3),
+    all: scored
+  };
+}
+
 function buildEvolutionResult(profile) {
+  const isEn = getCurrentLanguage() === "en";
   const scored = ROLE_PROFILES
     .map((role) => {
       const analysis = calculateRoleAnalysis(profile, role);
@@ -924,7 +1050,7 @@ function buildEvolutionResult(profile) {
         ...signal,
         level,
         readiness,
-        status: level ? (level === "high" ? "충족" : "보완 필요") : "미보유"
+        status: level ? (level === "high" ? (isEn ? "Met" : "충족") : (isEn ? "Needs Improvement" : "보완 필요")) : (isEn ? "Not Present" : "미보유")
       };
     })
     .sort((a, b) => b.demandPercent - a.demandPercent);
@@ -941,7 +1067,21 @@ function buildEvolutionResult(profile) {
   const knowledgeToLearn = roleGapSignals.length
     ? roleGapSignals.map((item) => `${item.skill}: ${item.evidence}를 다룰 수 있는 실무 수준까지 강화`)
     : [`${top.name} 핵심 역량을 유지/고도화하기 위한 고급 자동화·전략 역량 심화`];
-  const experiencesToBuild = [
+  const knowledgeToLearnLocalized = roleGapSignals.length
+    ? roleGapSignals.map((item) => (
+      isEn
+        ? `${item.skill}: build practical capability to execute this in production-grade workflows`
+        : `${item.skill}: ${item.evidence}를 다룰 수 있는 실무 수준까지 강화`
+    ))
+    : [isEn
+      ? `Deepen advanced automation and strategy capability required for ${top.name}`
+      : `${top.name} 핵심 역량을 유지/고도화하기 위한 고급 자동화·전략 역량 심화`];
+  const experiencesToBuild = isEn ? [
+    `Design one pilot project in your current role aligned with ${top.name}, and define KPI targets upfront`,
+    "Document outcomes with quantified metrics (uplift, cost reduction, lead-time impact) and build a portfolio case",
+    `Convert ${(top.hiringSignals || [])[0] || "core hiring signal"} into verifiable evidence at the top of your resume`,
+    "Operationalize a reusable decision loop: hypothesis → experiment → validation → scale"
+  ] : [
     `현재 직무에서 ${top.name} 관점의 파일럿 프로젝트 1건을 설계하고 KPI를 사전에 정의`,
     `프로젝트 결과를 정량 성과(증가율·절감율·리드타임)로 문서화해 포트폴리오화`,
     `${(top.hiringSignals || [])[0] || "핵심 채용 시그널"}을 증명할 수 있는 사례를 이력서 상단에 배치`,
@@ -1033,6 +1173,7 @@ function buildEvolutionResult(profile) {
   const strengthReasonSummary = profile.strengths
     .filter((strength) => Boolean(STRENGTH_REASON_MAP[strength]))
     .map((strength) => `${getStrengthLabel(strength)}: ${STRENGTH_REASON_MAP[strength]}`);
+  const futureEvolutionInsights = buildFutureEvolutionInsights(profile);
 
   return {
     topRole: top,
@@ -1049,14 +1190,15 @@ function buildEvolutionResult(profile) {
     weightedDemandReadiness,
     demandSignals,
     roleGapSignals,
-    knowledgeToLearn,
+    knowledgeToLearn: knowledgeToLearnLocalized,
     experiencesToBuild,
     immediateActions,
     focusSkills,
     quests,
     motivation,
     strengthReasonSummary,
-    experienceSignal
+    experienceSignal,
+    futureEvolutionInsights
   };
 }
 
@@ -1099,11 +1241,15 @@ function showLoadingState() {
 }
 
 function renderReport(profile, result) {
+  const isEn = getCurrentLanguage() === "en";
   const name = extractProfileName(profile);
   const persona = buildPersonaSummary(profile);
   const topTwoRoles = [result.topRole, ...(result.alternatives || []).slice(0, 1)];
   const backgroundCompanies = extractBackgroundCompanies(profile);
-  const companiesText = backgroundCompanies.length ? backgroundCompanies.join(", ") : "입력 경력 기반";
+  const companiesText = backgroundCompanies.length
+    ? backgroundCompanies.join(", ")
+    : (isEn ? "Based on submitted experience" : "입력 경력 기반");
+  const currentRoleHits = (result.topRole.analysis.relevance.currentRoleHits || []).slice(0, 5).join(", ");
 
   reportPanel.classList.remove("hidden");
   reportNode.classList.remove("empty");
@@ -1112,53 +1258,84 @@ function renderReport(profile, result) {
     <div class="report-layout report-narrative">
       <div class="report-hero-block report-hero-strong">
         <p class="mini-label">Hyper-Growth Career Evolution Report</p>
-        <h3>🚀 하이퍼-그로우: ${name} 님 커리어 진화 보고서</h3>
+        <h3>${isEn ? `🚀 Hyper-Growth: ${name}'s Career Evolution Report` : `🚀 하이퍼-그로우: ${name} 님 커리어 진화 보고서`}</h3>
       <div class="kpi-grid">
-        <div class="kpi-card"><p>준비도 점수</p><strong>${result.normalizedScore}점</strong></div>
-        <div class="kpi-card"><p>채용요건 충족도</p><strong>${result.weightedDemandReadiness}%</strong></div>
-        <div class="kpi-card"><p>직무 매칭 점수</p><strong>${result.topRole.score}점</strong></div>
+        <div class="kpi-card"><p>${isEn ? "Readiness Score" : "준비도 점수"}</p><strong>${result.normalizedScore}${isEn ? "" : "점"}</strong></div>
+        <div class="kpi-card"><p>${isEn ? "Hiring Requirement Fit" : "채용요건 충족도"}</p><strong>${result.weightedDemandReadiness}%</strong></div>
+        <div class="kpi-card"><p>${isEn ? "Role Match Score" : "직무 매칭 점수"}</p><strong>${result.topRole.score}${isEn ? "" : "점"}</strong></div>
       </div>
       </div>
 
       <div class="kpi-grid">
         <div class="kpi-card">
-          <p>1. 당신의 3대 핵심 DNA 조합 분석</p>
-          <p><strong>강점(Top 5):</strong> ${persona.topStrengths.join(", ")} (${persona.persona}형)</p>
-          <p><strong>성격(MBTI):</strong> ${persona.mbti}</p>
-          <p><strong>백그라운드:</strong> ${companiesText}까지 이어진 경력 흐름</p>
-          <p class="hint">경력 신호: ${result.experienceSignal.years}년차 · 기업 언급 ${result.experienceSignal.signals.companyHits}회 · 정량 성과 ${result.experienceSignal.signals.metricHits}건 · 리더십 표현 ${result.experienceSignal.signals.leadershipHits}회</p>
-          <p class="hint">현재 직무 연관 키워드: ${(result.topRole.analysis.relevance.currentRoleHits || []).slice(0, 5).join(", ") || "연관 키워드 미검출"}</p>
-          <p><strong>[종합 진단]</strong> 단순 운영형 인재가 아니라, 데이터를 통해 기회를 포착하고 전략을 실행으로 전환하는 시니어 성장 설계자 유형입니다.</p>
+          <p>${isEn ? "1. Your Core DNA Combination" : "1. 당신의 3대 핵심 DNA 조합 분석"}</p>
+          <p><strong>${isEn ? "Strengths (Top 5):" : "강점(Top 5):"}</strong> ${persona.topStrengths.join(", ")} ${isEn ? `(${persona.persona})` : `(${persona.persona}형)`}</p>
+          <p><strong>${isEn ? "Personality (MBTI):" : "성격(MBTI):"}</strong> ${persona.mbti}</p>
+          <p><strong>${isEn ? "Background:" : "백그라운드:"}</strong> ${isEn ? `${companiesText} career trajectory` : `${companiesText}까지 이어진 경력 흐름`}</p>
+          <p class="hint">${isEn
+            ? `Experience signals: ${result.experienceSignal.years} years · company mentions ${result.experienceSignal.signals.companyHits} · quantified outcomes ${result.experienceSignal.signals.metricHits} · leadership signals ${result.experienceSignal.signals.leadershipHits}`
+            : `경력 신호: ${result.experienceSignal.years}년차 · 기업 언급 ${result.experienceSignal.signals.companyHits}회 · 정량 성과 ${result.experienceSignal.signals.metricHits}건 · 리더십 표현 ${result.experienceSignal.signals.leadershipHits}회`
+          }</p>
+          <p class="hint">${isEn
+            ? `Current-role keyword overlap: ${currentRoleHits || "No aligned keywords detected"}`
+            : `현재 직무 연관 키워드: ${currentRoleHits || "연관 키워드 미검출"}`
+          }</p>
+          <p><strong>${isEn ? "[Diagnosis]" : "[종합 진단]"}</strong> ${isEn
+            ? "You are not an execution-only operator. You are a senior growth architect who identifies business opportunities from data and turns strategy into scalable systems."
+            : "단순 운영형 인재가 아니라, 데이터를 통해 기회를 포착하고 전략을 실행으로 전환하는 시니어 성장 설계자 유형입니다."
+          }</p>
         </div>
       </div>
 
       <div class="report-block">
-        <strong>2. 2027년, 연봉 성장에 유리한 '신인류 직무' 추천</strong>
+        <strong>${isEn ? "2. AI-Era Evolved Roles with Strong Compensation Upside" : "2. 2027년, 연봉 성장에 유리한 '신인류 직무' 추천"}</strong>
         ${topTwoRoles.map((role, idx) => {
           const narrative = getRoleNarrative(role.name, profile, result);
-          const prefix = idx === 0 ? "①" : "②";
+          const prefix = idx === 0 ? "1)" : "2)";
           return `
             <div class="chart-card">
               <h4>${prefix} ${role.name}</h4>
-              <p><strong>왜 적합한가?</strong> ${narrative.whyFit}</p>
-              <p><strong>수익 가치:</strong> ${narrative.value}</p>
-              <p><strong>연봉 밴드:</strong> ${role.salaryBand}</p>
-              <p><strong>핵심 채용 시그널:</strong> ${(role.hiringSignals || []).join(" / ")}</p>
+              <p><strong>${isEn ? "Why it fits:" : "왜 적합한가?"}</strong> ${narrative.whyFit}</p>
+              <p><strong>${isEn ? "Value impact:" : "수익 가치:"}</strong> ${narrative.value}</p>
+              <p><strong>${isEn ? "Compensation band:" : "연봉 밴드:"}</strong> ${role.salaryBand}</p>
+              <p><strong>${isEn ? "Key hiring signals:" : "핵심 채용 시그널:"}</strong> ${(role.hiringSignals || []).join(" / ")}</p>
             </div>
           `;
         }).join("")}
       </div>
 
       <div class="report-block">
-        <strong>3. 연봉 점프를 위한 '진화 퀘스트' (Action Plan)</strong>
+        <strong>${isEn ? "3. Capability Gap Blueprint (What to learn / build)" : "3. 연봉 점프를 위한 '진화 퀘스트' (Action Plan)"}</strong>
         <div class="chart-card">
-          <p><b>추천 직업과 현재 경력 간의 차이를 채우기 위해 알아야 할 것</b></p>
+          <p><b>${isEn ? "What you need to know to close the gap" : "추천 직업과 현재 경력 간의 차이를 채우기 위해 알아야 할 것"}</b></p>
           <ul>${result.knowledgeToLearn.map((item) => `<li>${item}</li>`).join("")}</ul>
         </div>
         <div class="chart-card">
-          <p><b>추천 직업과 현재 경력 간의 차이를 채우기 위해 쌓아야 할 경험</b></p>
+          <p><b>${isEn ? "What experience you need to build" : "추천 직업과 현재 경력 간의 차이를 채우기 위해 쌓아야 할 경험"}</b></p>
           <ul>${result.experiencesToBuild.map((item) => `<li>${item}</li>`).join("")}</ul>
         </div>
+      </div>
+
+      <div class="report-block">
+        <strong>${isEn ? "Core Evolution Indicators" : "진화의 핵심 지표"}</strong>
+        <div class="chart-card">
+          <ul>
+            <li><b>Operation ➔ Strategy</b>: ${isEn ? "Move from execution-heavy operations to system-level strategy design." : "단순 운영에서 전략 수립으로 이동."}</li>
+            <li><b>Execution ➔ Auditing</b>: ${isEn ? "Move from doing everything manually to auditing and approving AI outcomes." : "직접 실행에서 AI 결과물 검토·승인 역할로 이동."}</li>
+            <li><b>Fragmented ➔ Integrated</b>: ${isEn ? "Move from fragmented tasks to integrated data-to-impact orchestration." : "파편화된 업무가 아닌, 통합 데이터 기반 비즈니스 임팩트 설계로 이동."}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="report-block">
+        <strong>${isEn ? "Cross-Industry Job Evolution Forecast" : "분야별 직무 진화 예측"}</strong>
+        ${((result.futureEvolutionInsights || {}).recommendations || []).map((item) => `
+          <div class="chart-card">
+            <h4>${item.sector}</h4>
+            <p><strong>${isEn ? "Role Shift:" : "역할 전환:"}</strong> ${item.fromRole} ➔ ${item.toRole}</p>
+            <p><strong>${isEn ? "Core Role:" : "핵심 역할:"}</strong> ${item.description}</p>
+          </div>
+        `).join("")}
       </div>
     </div>
   `;
