@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI 커리어 진화 액셀러레이터</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -18,27 +19,54 @@
     </header>
 
     <section class="panel">
-      <h2>1) 사용자 입력</h2>
+      <h2>커리어 진단 입력</h2>
       <form id="career-form">
-        <div class="field">
-          <label for="name">이름(선택)</label>
-          <input id="name" name="name" type="text" placeholder="홍길동">
+        <div class="field-row">
+          <div class="field field-card">
+            <label for="current-role">현재 직무 선택하기</label>
+            <select id="current-role" name="current-role">
+              <option value="">선택해주세요</option>
+              <option>기획/전략</option>
+              <option>마케팅</option>
+              <option>영업/사업개발</option>
+              <option>운영/고객성공</option>
+              <option>개발/엔지니어링</option>
+              <option>데이터/분석</option>
+              <option>디자인</option>
+              <option>HR/채용</option>
+              <option>재무/회계</option>
+              <option>학생/취업준비</option>
+              <option>기타</option>
+            </select>
+          </div>
+
+          <div class="field field-card">
+            <label for="career-years">연차 선택하기</label>
+            <select id="career-years" name="career-years">
+              <option value="">선택해주세요</option>
+              <option>신입 (1년 미만)</option>
+              <option>1-3년</option>
+              <option>4-6년</option>
+              <option>7-10년</option>
+              <option>11년 이상</option>
+            </select>
+          </div>
         </div>
 
-        <div class="field">
-          <label>MBTI (최대 2개 선택)</label>
+        <div class="field field-card">
+          <label>MBTI선택하기 (최대 2개 선택)</label>
           <div id="mbti-grid" class="chips"></div>
           <p class="hint" id="mbti-hint">0 / 2 선택됨</p>
         </div>
 
-        <div class="field">
-          <label>Clifton Strengths (최대 5개 선택)</label>
+        <div class="field field-card">
+          <label>나의 강점 선택하기 (최대 5개 선택)</label>
           <div id="strength-grid" class="chips chips--dense"></div>
           <p class="hint" id="strength-hint">0 / 5 선택됨</p>
         </div>
 
-        <div class="field">
-          <label for="career-text">경력/이력서 텍스트</label>
+        <div class="field field-card">
+          <label for="career-text">경력 입력하기</label>
           <textarea id="career-text" placeholder="핵심 경력과 성과를 붙여넣어 주세요."></textarea>
           <div class="input-row">
             <input id="career-file" type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
@@ -46,14 +74,14 @@
           </div>
         </div>
 
-        <div class="field">
-          <label>스킬 & 수준</label>
+        <div class="field field-card">
+          <label>스킬 입력하기</label>
           <div id="skills-wrap"></div>
           <button id="add-skill" type="button" class="btn btn--secondary">스킬 추가</button>
         </div>
 
-        <div class="field">
-          <label for="weakness-text">약점/기타 정보</label>
+        <div class="field field-card">
+          <label for="weakness-text">기타 나를 알 수 있는 정보 입력하기</label>
           <textarea id="weakness-text" placeholder="예: 영어 발표가 약함, 시간 관리 어려움, 포트폴리오 부족"></textarea>
           <div class="input-row">
             <input id="weakness-file" type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">

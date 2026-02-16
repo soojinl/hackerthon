@@ -406,6 +406,7 @@ function showLoadingState() {
 
 function renderReport(profile, result) {
   const breakdown = result.topRole.analysis.scoreBreakdown;
+  const profileSummary = [profile.currentRole, profile.careerYears].filter(Boolean).join(" · ");
   const chartItems = [
     { label: "필수 스킬", value: breakdown.skillPoints, max: 120 },
     { label: "강점 시너지", value: breakdown.strengthPoints, max: 35 },
@@ -423,8 +424,8 @@ function renderReport(profile, result) {
     <div class="report-layout">
       <div class="report-hero-block">
         <p class="mini-label">AI Career Evolution Report</p>
-        <h3>${profile.name || "사용자"} 님 추천 포지션: ${result.topRole.name}</h3>
-        <p>${result.topRole.evolutionFrom} 기반으로 진화 경로를 분석했습니다. 예상 연봉 밴드: <b>${result.topRole.salaryBand}</b></p>
+        <h3>추천 포지션: ${result.topRole.name}</h3>
+        <p>${profileSummary ? `<b>${profileSummary}</b> 정보를 기준으로 ` : ""}${result.topRole.evolutionFrom} 기반 진화 경로를 분석했습니다. 예상 연봉 밴드: <b>${result.topRole.salaryBand}</b></p>
       </div>
 
       <div class="kpi-grid">
@@ -571,7 +572,8 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const profile = {
-      name: document.getElementById("name").value.trim(),
+      currentRole: document.getElementById("current-role").value.trim(),
+      careerYears: document.getElementById("career-years").value.trim(),
       mbti: collectSelected("mbti"),
       strengths: collectSelected("strength"),
       careerText: document.getElementById("career-text").value.trim(),
