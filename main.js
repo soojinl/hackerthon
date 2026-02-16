@@ -128,6 +128,27 @@ const WEAKNESS_ROUTINES = [
   { keyword: "수학", plan: "기초 통계/선형대수 30분 학습 + 주 1회 문제 풀이" }
 ];
 
+const MARKET_SIGNALS = [
+  "WEF Future of Jobs 2025: 2030년까지 전 세계 직무의 약 22%가 재편되고, 순고용은 +78M(신규 170M/감소 92M) 전망.",
+  "MGI Skill Shift: 고급 디지털/기술 스킬 수요와 사회정서(소통/리더십) 스킬 수요가 함께 증가.",
+  "OpenAI GPTs are GPTs: 업무 단위(Task) 자동화 영향이 빠르게 확대되며, 반복 문서/요약/분류 업무부터 전환 압력이 큼."
+];
+
+const KNOWLEDGE_SOURCES = {
+  globalTrends: [
+    "World Economic Forum (WEF) - Future of Jobs Report",
+    "McKinsey Global Institute - Skill Shift / Automation 보고서"
+  ],
+  practicalStack: [
+    "LinkedIn Learning & Career Explorer - 직무 전환 경로/스킬 갭",
+    "AI-Hub (한국) - 국내 AI 기술 동향/공공 데이터셋"
+  ],
+  researchAndCommunity: [
+    "arXiv.org - AI in Marketing, Labor market impact of LLM 등 최신 논문",
+    "전문 교육 플랫폼(인프런/패스트캠퍼스) - 현업형 실무 역량 업데이트"
+  ]
+};
+
 const mbtiGrid = document.getElementById("mbti-grid");
 const strengthGrid = document.getElementById("strength-grid");
 const mbtiHint = document.getElementById("mbti-hint");
@@ -388,6 +409,22 @@ function renderReport(profile, result) {
       <ul>
         ${result.demandSignals.map((item) => `<li>${item.skill} - 공고 등장 빈도 ${item.demandPercent}% / 내 상태: ${item.status}${item.level ? `(${item.level})` : ""}<br><small>${item.evidence}</small></li>`).join("")}
       </ul>
+      <p><small>표본 기준: 최근 유사 직무 LinkedIn 공고 패턴 샘플링 기반 가중치</small></p>
+    </div>
+    <div class="report-block">
+      <strong>시장 변화 인사이트 (외부 리서치 반영)</strong>
+      <ul>
+        ${MARKET_SIGNALS.map((signal) => `<li>${signal}</li>`).join("")}
+      </ul>
+    </div>
+    <div class="report-block">
+      <strong>학습/리서치 소스 (결과 산출 근거)</strong>
+      <p><b>글로벌 트렌드 및 보고서</b></p>
+      <ul>${KNOWLEDGE_SOURCES.globalTrends.map((item) => `<li>${item}</li>`).join("")}</ul>
+      <p><b>실무 스택 및 채용 정보</b></p>
+      <ul>${KNOWLEDGE_SOURCES.practicalStack.map((item) => `<li>${item}</li>`).join("")}</ul>
+      <p><b>학술 및 커뮤니티</b></p>
+      <ul>${KNOWLEDGE_SOURCES.researchAndCommunity.map((item) => `<li>${item}</li>`).join("")}</ul>
     </div>
     <div class="report-block">
       <strong>대안 직무</strong>
