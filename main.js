@@ -131,6 +131,7 @@ const ROLE_PROFILES = [
       { skill: "Data Analysis", demandPercent: 78, evidence: "행동 데이터 기반 파라미터 조정" },
       { skill: "Leadership", demandPercent: 75, evidence: "C-level/핵심 조직 정렬 및 실행 리딩" }
     ],
+    relevanceKeywords: ["crm", "loyalty", "멤버십", "포인트", "브랜드", "마케팅", "그로스", "리텐션", "캠페인"],
     toolStack: ["SQL/BI", "시나리오 모델링", "자동화 워크플로", "LLM 분석 도구"],
     outcomeMetrics: ["LTV/CAC 개선", "리텐션 상승", "로열티 구조 리스크 감소"],
     linkedinEvidence: ["Animoca Brands", "ConsenSys", "Binance"]
@@ -155,6 +156,7 @@ const ROLE_PROFILES = [
       { skill: "Risk Management", demandPercent: 79, evidence: "변동성/리스크 대응 계획" },
       { skill: "Project Management", demandPercent: 75, evidence: "조직 간 실행 관리" }
     ],
+    relevanceKeywords: ["마케팅", "광고", "퍼포먼스", "브랜드", "roi", "attribution", "forecast", "예산", "캠페인"],
     toolStack: ["MMM/Attribution", "SQL/BI", "Forecast Models", "LLM 분석 보조"],
     outcomeMetrics: ["마케팅 ROI 개선", "예측 오차 감소", "예산 효율 상승"],
     linkedinEvidence: ["Hyundai Motor", "Unilever", "P&G"]
@@ -179,6 +181,7 @@ const ROLE_PROFILES = [
       { skill: "Strategic Planning", demandPercent: 79, evidence: "레버리지 중심 우선순위 설계" },
       { skill: "Stakeholder Communication", demandPercent: 76, evidence: "조직 간 의사결정 정렬" }
     ],
+    relevanceKeywords: ["영업", "sales", "revenue", "revops", "pipeline", "pricing", "수익", "사업개발", "오퍼레이션"],
     toolStack: ["Agent Orchestrator", "Workflow Automation", "Vector DB", "BI Dashboard"],
     outcomeMetrics: ["운영마진 개선", "처리시간 단축", "자동화 커버리지 확대"],
     linkedinEvidence: ["Forsit", "Workato", "UiPath"]
@@ -203,9 +206,110 @@ const ROLE_PROFILES = [
       { skill: "Digital Marketing", demandPercent: 77, evidence: "채널/메시지 운영 최적화" },
       { skill: "Stakeholder Communication", demandPercent: 74, evidence: "제품/마케팅/데이터 협업" }
     ],
+    relevanceKeywords: ["마케팅", "콘텐츠", "imc", "브랜딩", "캠페인", "crm", "growth", "creative", "퍼널"],
     toolStack: ["LLM Agent Framework", "Attribution Stack", "Workflow Engine", "Experimentation Platform"],
     outcomeMetrics: ["전환율 개선", "실험 속도 증가", "캠페인 운영비 절감"],
     linkedinEvidence: ["Meta", "Google", "TikTok"]
+  },
+  {
+    name: "AI Supply Chain Decisioning Architect",
+    evolutionFrom: "기존 직무: 물류/SCM/운영기획 리드",
+    salaryBand: "1.4억~3.0억+",
+    seniorityPreference: "senior",
+    neededSkills: ["Operations", "Data Analysis", "Risk Management", "Strategic Planning", "Project Management"],
+    boostStrengths: ["Analytical", "Input", "Strategic", "Discipline", "Focus"],
+    boostMbti: ["INTJ", "ISTJ", "ENTJ", "ESTJ"],
+    hiringSignals: [
+      "수요/재고/물류 의사결정을 데이터 기반으로 자동화한 경험",
+      "운영 리드타임/비용 최적화 프로젝트 리딩 경험",
+      "시나리오 기반 공급망 리스크 대응 체계 수립 경험"
+    ],
+    demandSignals: [
+      { skill: "Operations", demandPercent: 88, evidence: "운영 체계 최적화" },
+      { skill: "Data Analysis", demandPercent: 84, evidence: "수요·재고 의사결정" },
+      { skill: "Risk Management", demandPercent: 81, evidence: "공급망 리스크 대응" },
+      { skill: "Strategic Planning", demandPercent: 77, evidence: "중장기 운영 전략 수립" },
+      { skill: "Project Management", demandPercent: 73, evidence: "실행 프로젝트 관리" }
+    ],
+    relevanceKeywords: ["supply", "scm", "물류", "재고", "구매", "운영", "생산", "warehouse", "logistics", "공급망"],
+    toolStack: ["Demand Forecasting", "Optimization Solver", "BI Dashboard", "Automation Engine"],
+    outcomeMetrics: ["재고회전율 개선", "물류비 절감", "서비스레벨 향상"],
+    linkedinEvidence: ["Amazon", "Coupang", "Samsung SDS"]
+  },
+  {
+    name: "AI Finance & Pricing Intelligence Strategist",
+    evolutionFrom: "기존 직무: 재무/FP&A/전략기획",
+    salaryBand: "1.5억~3.3억+",
+    seniorityPreference: "senior",
+    neededSkills: ["Financial Analysis", "Strategic Planning", "Data Analysis", "Risk Management", "Stakeholder Communication"],
+    boostStrengths: ["Analytical", "Input", "Strategic", "Responsibility", "Learner"],
+    boostMbti: ["INTJ", "ISTJ", "ENTJ", "INTP"],
+    hiringSignals: [
+      "가격/수익성 모델을 구축해 사업 의사결정을 지원한 경험",
+      "재무 예측 정밀도를 개선한 자동화 체계 구축 경험",
+      "경영진 대상 전략/재무 인사이트 커뮤니케이션 역량"
+    ],
+    demandSignals: [
+      { skill: "Financial Analysis", demandPercent: 90, evidence: "수익성·가격 전략 분석" },
+      { skill: "Data Analysis", demandPercent: 84, evidence: "예측 모델링" },
+      { skill: "Strategic Planning", demandPercent: 81, evidence: "재무 전략 수립" },
+      { skill: "Risk Management", demandPercent: 78, evidence: "변동성 대응 및 시나리오 계획" },
+      { skill: "Stakeholder Communication", demandPercent: 72, evidence: "경영진 보고/정렬" }
+    ],
+    relevanceKeywords: ["재무", "fp&a", "finance", "회계", "원가", "수익성", "pricing", "예산", "손익", "profit"],
+    toolStack: ["FP&A Model", "Pricing Simulator", "Scenario Engine", "LLM Copilot"],
+    outcomeMetrics: ["마진율 개선", "예측 오차 감소", "의사결정 속도 향상"],
+    linkedinEvidence: ["Adobe", "Salesforce", "SAP"]
+  },
+  {
+    name: "Agentic People Operations Architect",
+    evolutionFrom: "기존 직무: HR/채용/인사운영",
+    salaryBand: "1.2억~2.7억+",
+    seniorityPreference: "mid",
+    neededSkills: ["Leadership", "Project Management", "No-Code Automation", "Stakeholder Communication", "Data Analysis"],
+    boostStrengths: ["Developer", "Empathy", "Responsibility", "Connectedness", "Learner"],
+    boostMbti: ["ENFJ", "INFJ", "ESFJ", "ISFJ"],
+    hiringSignals: [
+      "채용/온보딩/평가 프로세스를 자동화해 운영 효율을 개선한 경험",
+      "인사 데이터를 기반으로 조직 운영 개선안을 도출한 경험",
+      "현업 리더와 협업해 변화관리 프로젝트를 리딩한 경험"
+    ],
+    demandSignals: [
+      { skill: "No-Code Automation", demandPercent: 84, evidence: "HR 워크플로우 자동화" },
+      { skill: "Project Management", demandPercent: 80, evidence: "프로세스 개선 프로젝트 운영" },
+      { skill: "Stakeholder Communication", demandPercent: 78, evidence: "현업/리더십 협업" },
+      { skill: "Data Analysis", demandPercent: 74, evidence: "인사 지표 해석 및 의사결정" },
+      { skill: "Leadership", demandPercent: 70, evidence: "변화관리 리딩" }
+    ],
+    relevanceKeywords: ["hr", "채용", "인사", "talent", "people", "조직", "온보딩", "평가", "인재"],
+    toolStack: ["ATS/HRIS", "Workflow Automation", "Org Analytics", "LLM Assistants"],
+    outcomeMetrics: ["채용 리드타임 단축", "온보딩 품질 향상", "운영 효율 개선"],
+    linkedinEvidence: ["LinkedIn", "Workday", "Mercer"]
+  },
+  {
+    name: "AI Product Decision Intelligence PM",
+    evolutionFrom: "기존 직무: PM/프로덕트/서비스기획",
+    salaryBand: "1.4억~3.1억+",
+    seniorityPreference: "senior",
+    neededSkills: ["Product Management", "Data Analysis", "Strategic Planning", "Stakeholder Communication", "Leadership"],
+    boostStrengths: ["Ideation", "Analytical", "Learner", "Activator", "Strategic"],
+    boostMbti: ["ENTP", "INTJ", "ENTJ", "INFP"],
+    hiringSignals: [
+      "제품 의사결정을 데이터/실험 기반으로 운영한 경험",
+      "MVP-학습-확장 루프를 설계해 성과를 낸 경험",
+      "제품/엔지니어링/비즈니스 조직을 정렬한 리딩 경험"
+    ],
+    demandSignals: [
+      { skill: "Product Management", demandPercent: 88, evidence: "제품 전략 및 우선순위 설계" },
+      { skill: "Data Analysis", demandPercent: 83, evidence: "실험/지표 의사결정" },
+      { skill: "Strategic Planning", demandPercent: 79, evidence: "로드맵/성장 전략 수립" },
+      { skill: "Stakeholder Communication", demandPercent: 76, evidence: "조직 간 합의 형성" },
+      { skill: "Leadership", demandPercent: 74, evidence: "크로스펑셔널 실행 리딩" }
+    ],
+    relevanceKeywords: ["pm", "product", "서비스기획", "프로덕트", "mvp", "로드맵", "ux", "feature", "기획"],
+    toolStack: ["Experimentation Platform", "Product Analytics", "AI Copilot", "Workflow Automation"],
+    outcomeMetrics: ["활성 사용자 증가", "리텐션 개선", "출시 속도 향상"],
+    linkedinEvidence: ["Google", "Microsoft", "Atlassian"]
   }
 ];
 
@@ -596,6 +700,22 @@ function evaluateExperienceSignal(profile) {
   };
 }
 
+function calculateRoleRelevance(profile, role) {
+  const text = `${profile.currentRole || ""}\n${profile.careerText || ""}`.toLowerCase();
+  const keywords = (role.relevanceKeywords || []).map((keyword) => keyword.toLowerCase());
+  const hits = keywords.filter((keyword) => keyword && text.includes(keyword));
+  const uniqueHits = [...new Set(hits)];
+  const points = Math.min(30, uniqueHits.length * 6);
+  const hasCurrentRoleInput = (profile.currentRole || "").trim().length > 0;
+  const mismatchPenalty = hasCurrentRoleInput && uniqueHits.length === 0 ? 14 : 0;
+
+  return {
+    points,
+    mismatchPenalty,
+    hits: uniqueHits
+  };
+}
+
 function calculateRoleAnalysis(profile, role) {
   const skillWeight = { low: 1, mid: 2, high: 3 };
   const userSkillMap = new Map(profile.skills.map((s) => [s.name, s.level]));
@@ -616,13 +736,14 @@ function calculateRoleAnalysis(profile, role) {
   const matchedStrengths = profile.strengths.filter((s) => role.boostStrengths.includes(s));
   const matchedMbti = profile.mbti.filter((m) => role.boostMbti.includes(m));
   const experienceSignal = evaluateExperienceSignal(profile);
+  const relevance = calculateRoleRelevance(profile, role);
   const strengthPoints = matchedStrengths.length * 7;
   const mbtiPoints = matchedMbti.length * 6;
   const seniorityFitBonus =
     role.seniorityPreference === experienceSignal.level ? 10 :
     role.seniorityPreference === "senior" && experienceSignal.level === "mid" ? 5 : 0;
   const experiencePoints = Math.min(60, experienceSignal.points + seniorityFitBonus);
-  const score = skillPoints + strengthPoints + mbtiPoints + experiencePoints;
+  const score = skillPoints + strengthPoints + mbtiPoints + experiencePoints + relevance.points - relevance.mismatchPenalty;
 
   return {
     score,
@@ -630,14 +751,16 @@ function calculateRoleAnalysis(profile, role) {
       skillPoints,
       strengthPoints,
       mbtiPoints,
-      experiencePoints
+      experiencePoints,
+      relevancePoints: relevance.points
     },
     matchedSkills,
     missingSkills,
     matchedStrengths,
     matchedMbti,
     skillCoverage: Math.round((matchedSkills.length / role.neededSkills.length) * 100),
-    experienceSignal
+    experienceSignal,
+    relevance
   };
 }
 
@@ -844,11 +967,11 @@ function renderReport(profile, result) {
       <div class="report-hero-block report-hero-strong">
         <p class="mini-label">Hyper-Growth Career Evolution Report</p>
         <h3>🚀 하이퍼-그로우: ${name} 님 커리어 진화 보고서</h3>
-        <div class="kpi-grid">
-          <div class="kpi-card"><p>준비도 점수</p><strong>${result.normalizedScore}점</strong></div>
-          <div class="kpi-card"><p>채용요건 충족도</p><strong>${result.weightedDemandReadiness}%</strong></div>
-          <div class="kpi-card"><p>직무 매칭 점수</p><strong>${result.topRole.score}점</strong></div>
-        </div>
+      <div class="kpi-grid">
+        <div class="kpi-card"><p>준비도 점수</p><strong>${result.normalizedScore}점</strong></div>
+        <div class="kpi-card"><p>채용요건 충족도</p><strong>${result.weightedDemandReadiness}%</strong></div>
+        <div class="kpi-card"><p>직무 매칭 점수</p><strong>${result.topRole.score}점</strong></div>
+      </div>
       </div>
 
       <div class="kpi-grid">
@@ -858,6 +981,7 @@ function renderReport(profile, result) {
           <p><strong>성격(MBTI):</strong> ${persona.mbti}</p>
           <p><strong>백그라운드:</strong> ${companiesText}까지 이어진 경력 흐름</p>
           <p class="hint">경력 신호: ${result.experienceSignal.years}년차 · 기업 언급 ${result.experienceSignal.signals.companyHits}회 · 정량 성과 ${result.experienceSignal.signals.metricHits}건 · 리더십 표현 ${result.experienceSignal.signals.leadershipHits}회</p>
+          <p class="hint">현재 직무 연관 키워드: ${(result.topRole.analysis.relevance.hits || []).slice(0, 5).join(", ") || "연관 키워드 미검출"}</p>
           <p><strong>[종합 진단]</strong> 단순 운영형 인재가 아니라, 데이터를 통해 기회를 포착하고 전략을 실행으로 전환하는 시니어 성장 설계자 유형입니다.</p>
         </div>
       </div>
