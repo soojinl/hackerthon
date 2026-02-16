@@ -626,6 +626,26 @@ function getRoleNarrative(roleName, profile, result) {
   };
 }
 
+function localizeSalaryBand(salaryBand, isEn) {
+  if (!isEn) return salaryBand;
+  const matched = String(salaryBand || "").match(/([\d.]+)\s*억\s*~\s*([\d.]+)\s*억\+/);
+  if (!matched) return "Compensation varies by company/region";
+  const minM = Math.round(Number(matched[1]) * 100);
+  const maxM = Math.round(Number(matched[2]) * 100);
+  return `KRW ${minM}M-${maxM}M+`;
+}
+
+function getLocalizedHiringSignals(role, isEn) {
+  if (!isEn) return role.hiringSignals || [];
+  const topSkills = (role.neededSkills || []).slice(0, 3).join(", ") || "core role capabilities";
+  const topMetrics = (role.outcomeMetrics || []).slice(0, 2).join(", ") || "business impact metrics";
+  return [
+    `Demonstrated ownership of ${topSkills} in production environments`,
+    `Track record of measurable outcomes such as ${topMetrics}`,
+    "Ability to align cross-functional stakeholders with data, automation, and governance"
+  ];
+}
+
 function populateCareerYearOptions() {
   const selected = careerYearsSelect.value;
   const options = [`<option value="">${t("years_default")}</option>`, `<option value="0">${t("years_entry")}</option>`];
@@ -1303,7 +1323,8 @@ function showLoadingState() {
 
 function renderReport(profile, result) {
   const isEn = getCurrentLanguage() === "en";
-  const name = extractProfileName(profile);
+  const detectedName = extractProfileName(profile);
+  const name = isEn && /[가-힣]/.test(detectedName) ? "Candidate" : detectedName;
   const persona = buildPersonaSummary(profile);
   const topTwoRoles = [result.topRole, ...(result.alternatives || []).slice(0, 1)];
   const backgroundCompanies = extractBackgroundCompanies(profile);
@@ -1311,6 +1332,7 @@ function renderReport(profile, result) {
     ? backgroundCompanies.join(", ")
     : (isEn ? "Based on submitted experience" : "입력 경력 기반");
   const currentRoleHits = (result.topRole.analysis.relevance.currentRoleHits || []).slice(0, 5).join(", ");
+  const currentRoleHitCount = (result.topRole.analysis.relevance.currentRoleHits || []).length;
 
   reportPanel.classList.remove("hidden");
   reportNode.classList.remove("empty");
@@ -1332,13 +1354,13 @@ function renderReport(profile, result) {
           <p>${isEn ? "1. Your Core DNA Combination" : "1. 당신의 3대 핵심 DNA 조합 분석"}</p>
           <p><strong>${isEn ? "Strengths (Top 5):" : "강점(Top 5):"}</strong> ${persona.topStrengths.join(", ")} ${isEn ? `(${persona.persona})` : `(${persona.persona}형)`}</p>
           <p><strong>${isEn ? "Personality (MBTI):" : "성격(MBTI):"}</strong> ${persona.mbti}</p>
-          <p><strong>${isEn ? "Background:" : "백그라운드:"}</strong> ${isEn ? `${companiesText} career trajectory` : `${companiesText}까지 이어진 경력 흐름`}</p>
+          <p><strong>${isEn ? "Background:" : "백그라운드:"}</strong> ${isEn ? "Career trajectory inferred from submitted profile and experience evidence" : `${companiesText}까지 이어진 경력 흐름`}</p>
           <p class="hint">${isEn
             ? `Experience signals: ${result.experienceSignal.years} years · company mentions ${result.experienceSignal.signals.companyHits} · quantified outcomes ${result.experienceSignal.signals.metricHits} · leadership signals ${result.experienceSignal.signals.leadershipHits}`
             : `경력 신호: ${result.experienceSignal.years}년차 · 기업 언급 ${result.experienceSignal.signals.companyHits}회 · 정량 성과 ${result.experienceSignal.signals.metricHits}건 · 리더십 표현 ${result.experienceSignal.signals.leadershipHits}회`
           }</p>
           <p class="hint">${isEn
-            ? `Current-role keyword overlap: ${currentRoleHits || "No aligned keywords detected"}`
+            ? `Current-role keyword overlap: ${currentRoleHitCount} matched keywords`
             : `현재 직무 연관 키워드: ${currentRoleHits || "연관 키워드 미검출"}`
           }</p>
           <p><strong>${isEn ? "[Diagnosis]" : "[종합 진단]"}</strong> ${isEn
@@ -1358,8 +1380,8 @@ function renderReport(profile, result) {
               <h4>${prefix} ${role.name}</h4>
               <p><strong>${isEn ? "Why it fits:" : "왜 적합한가?"}</strong> ${narrative.whyFit}</p>
               <p><strong>${isEn ? "Value impact:" : "수익 가치:"}</strong> ${narrative.value}</p>
-              <p><strong>${isEn ? "Compensation band:" : "연봉 밴드:"}</strong> ${role.salaryBand}</p>
-              <p><strong>${isEn ? "Key hiring signals:" : "핵심 채용 시그널:"}</strong> ${(role.hiringSignals || []).join(" / ")}</p>
+              <p><strong>${isEn ? "Compensation band:" : "연봉 밴드:"}</strong> ${localizeSalaryBand(role.salaryBand, isEn)}</p>
+              <p><strong>${isEn ? "Key hiring signals:" : "핵심 채용 시그널:"}</strong> ${getLocalizedHiringSignals(role, isEn).join(" / ")}</p>
             </div>
           `;
         }).join("")}
