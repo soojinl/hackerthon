@@ -5,13 +5,39 @@ const MBTI_TYPES = [
   "ISTP", "ISFP", "ESTP", "ESFP"
 ];
 
-const CLIFTON_34 = [
-  "Achiever", "Activator", "Adaptability", "Analytical", "Arranger", "Belief",
-  "Command", "Communication", "Competition", "Connectedness", "Consistency", "Context",
-  "Deliberative", "Developer", "Discipline", "Empathy", "Focus", "Futuristic",
-  "Harmony", "Ideation", "Includer", "Individualization", "Input", "Intellection",
-  "Learner", "Maximizer", "Positivity", "Relator", "Responsibility", "Restorative",
-  "Self-Assurance", "Significance", "Strategic", "Woo"
+const CLIFTON_STRENGTHS = [
+  { value: "Achiever", ko: "성취자", en: "Achiever" },
+  { value: "Arranger", ko: "정렬", en: "Arranger" },
+  { value: "Belief", ko: "믿음", en: "Belief" },
+  { value: "Consistency", ko: "일관성", en: "Consistency" },
+  { value: "Fairness", ko: "공정성", en: "Fairness" },
+  { value: "Discipline", ko: "규율", en: "Discipline" },
+  { value: "Focus", ko: "집중", en: "Focus" },
+  { value: "Responsibility", ko: "책임", en: "Responsibility" },
+  { value: "Restorative", ko: "복구", en: "Restorative" },
+  { value: "Activator", ko: "행동", en: "Activator" },
+  { value: "Command", ko: "명령", en: "Command" },
+  { value: "Communication", ko: "의사소통", en: "Communication" },
+  { value: "Competition", ko: "경쟁", en: "Competition" },
+  { value: "Maximizer", ko: "승부근성", en: "Maximizer" },
+  { value: "Self-Assurance", ko: "자기확신", en: "Self-Assurance" },
+  { value: "Includer", ko: "포용", en: "Includer" },
+  { value: "Positivity", ko: "긍정", en: "Positivity" },
+  { value: "Adaptability", ko: "적응", en: "Adaptability" },
+  { value: "Connectedness", ko: "연결", en: "Connectedness" },
+  { value: "Developer", ko: "개발", en: "Developer" },
+  { value: "Empathy", ko: "공감", en: "Empathy" },
+  { value: "Harmony", ko: "화합", en: "Harmony" },
+  { value: "Individualization", ko: "개별화", en: "Individualization" },
+  { value: "Input", ko: "수집", en: "Input" },
+  { value: "Woo", ko: "사교", en: "Woo" },
+  { value: "Analytical", ko: "분석", en: "Analytical" },
+  { value: "Context", ko: "컨텍스트", en: "Context" },
+  { value: "Futuristic", ko: "미래지향", en: "Futuristic" },
+  { value: "Ideation", ko: "아이디어", en: "Ideation" },
+  { value: "Intellection", ko: "지적", en: "Intellection" },
+  { value: "Learner", ko: "학습", en: "Learner" },
+  { value: "Strategic", ko: "전략", en: "Strategic" }
 ];
 
 const SKILL_OPTIONS = [
@@ -213,11 +239,15 @@ const reportPanel = document.getElementById("report-panel");
 const reportNode = document.getElementById("report");
 
 function renderChips(items, container, name, maxCount, hintNode) {
+  const lang = (document.documentElement.lang || "ko").toLowerCase().startsWith("en") ? "en" : "ko";
   container.innerHTML = "";
   items.forEach((item) => {
+    const normalized = typeof item === "string"
+      ? { value: item, label: item }
+      : { value: item.value, label: lang === "en" ? item.en : item.ko };
     const label = document.createElement("label");
     label.className = "chip";
-    label.innerHTML = `<input type="checkbox" name="${name}" value="${item}">${item}`;
+    label.innerHTML = `<input type="checkbox" name="${name}" value="${normalized.value}">${normalized.label}`;
     const input = label.querySelector("input");
 
     input.addEventListener("change", () => {
@@ -674,6 +704,6 @@ form.addEventListener("submit", async (event) => {
 });
 
 renderChips(MBTI_TYPES, mbtiGrid, "mbti", 2, mbtiHint);
-renderChips(CLIFTON_34, strengthGrid, "strength", 5, strengthHint);
+renderChips(CLIFTON_STRENGTHS, strengthGrid, "strength", 5, strengthHint);
 createSkillRow("Communication", "mid");
 createSkillRow("Project Management", "mid");
