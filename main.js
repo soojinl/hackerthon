@@ -1327,16 +1327,6 @@ function renderReport(profile, result) {
         </div>
       </div>
 
-      <div class="report-block">
-        <strong>${isEn ? "Cross-Industry Job Evolution Forecast" : "분야별 직무 진화 예측"}</strong>
-        ${((result.futureEvolutionInsights || {}).recommendations || []).map((item) => `
-          <div class="chart-card">
-            <h4>${item.sector}</h4>
-            <p><strong>${isEn ? "Role Shift:" : "역할 전환:"}</strong> ${item.fromRole} ➔ ${item.toRole}</p>
-            <p><strong>${isEn ? "Core Role:" : "핵심 역할:"}</strong> ${item.description}</p>
-          </div>
-        `).join("")}
-      </div>
     </div>
   `;
 
