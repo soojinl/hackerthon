@@ -156,6 +156,7 @@ const strengthHint = document.getElementById("strength-hint");
 const skillsWrap = document.getElementById("skills-wrap");
 const addSkillBtn = document.getElementById("add-skill");
 const form = document.getElementById("career-form");
+const submitBtn = form.querySelector('button[type="submit"]');
 const reportPanel = document.getElementById("report-panel");
 const reportNode = document.getElementById("report");
 
@@ -364,129 +365,228 @@ function buildEvolutionResult(profile) {
   };
 }
 
-function renderReport(profile, result) {
+function showLoadingState() {
   reportPanel.classList.remove("hidden");
   reportNode.classList.remove("empty");
   reportNode.innerHTML = `
-    <div class="report-block">
-      <h3>${profile.name || "사용자"} 님의 커리어 진화 리포트</h3>
-      <p><strong>추천 신직업:</strong> ${result.topRole.name} (예상 연봉 밴드: ${result.topRole.salaryBand})</p>
-      <p><strong>직무 진화 기준:</strong> ${result.topRole.evolutionFrom}</p>
-      <p><strong>매칭 점수:</strong> ${result.topRole.score}점 / 준비도 ${result.normalizedScore}점(${result.readinessTier})</p>
-      <p><strong>채용요건 충족도:</strong> ${result.weightedDemandReadiness}% (요구조건 빈도 가중)</p>
-      <p><strong>분석 신뢰도:</strong> ${result.confidence} (입력 데이터 기반)</p>
-      <p><strong>핵심 근거:</strong> MBTI(${profile.mbti.join(", ") || "미선택"}), 강점(${profile.strengths.join(", ") || "미선택"}), 보유 스킬 기반 매칭</p>
+    <div class="loading-card">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <h3>AI 커리어 시뮬레이션 분석 중</h3>
+      <p id="loading-text">입력 데이터 정규화 및 직무 매칭을 시작합니다. (7초)</p>
+      <div class="loading-track">
+        <div id="loading-progress" class="loading-progress" style="width: 0%"></div>
+      </div>
     </div>
-    <div class="report-block">
-      <strong>점수 분해</strong>
-      <ul>
-        <li>필수 스킬 점수: ${result.topRole.analysis.scoreBreakdown.skillPoints}점 (충족률 ${result.topRole.analysis.skillCoverage}%)</li>
-        <li>강점 시너지 점수: ${result.topRole.analysis.scoreBreakdown.strengthPoints}점</li>
-        <li>MBTI 적합 점수: ${result.topRole.analysis.scoreBreakdown.mbtiPoints}점</li>
-        <li>경력 서술 점수: ${result.topRole.analysis.scoreBreakdown.experiencePoints}점</li>
-      </ul>
-    </div>
-    <div class="report-block">
-      <strong>직무 적합도 디테일</strong>
-      <ul>
-        <li>이미 보유한 핵심 스킬: ${(result.topRole.analysis.matchedSkills.map((s) => `${s.name}(${s.level})`).join(", ") || "없음")}</li>
-        <li>부족한 핵심 스킬: ${(result.topRole.analysis.missingSkills.join(", ") || "없음")}</li>
-        <li>활용 가능한 강점: ${(result.topRole.analysis.matchedStrengths.join(", ") || "없음")}</li>
-        <li>유리한 MBTI 포인트: ${(result.topRole.analysis.matchedMbti.join(", ") || "없음")}</li>
-      </ul>
-    </div>
-    <div class="report-block">
-      <strong>LinkedIn 채용 시그널 (실제 공고 패턴 반영)</strong>
-      <ul>
-        ${result.topRole.hiringSignals.map((signal) => `<li>${signal}</li>`).join("")}
-      </ul>
-      <p><strong>현업 도구 스택:</strong> ${result.topRole.toolStack.join(", ")}</p>
-      <p><strong>기업이 보는 성과지표:</strong> ${result.topRole.outcomeMetrics.join(", ")}</p>
-      <p><strong>유사 채용 기업 예시:</strong> ${result.topRole.linkedinEvidence.join(", ")}</p>
-    </div>
-    <div class="report-block">
-      <strong>LinkedIn 요구조건 빈도 기반 우선순위</strong>
-      <ul>
-        ${result.demandSignals.map((item) => `<li>${item.skill} - 공고 등장 빈도 ${item.demandPercent}% / 내 상태: ${item.status}${item.level ? `(${item.level})` : ""}<br><small>${item.evidence}</small></li>`).join("")}
-      </ul>
-      <p><small>표본 기준: 최근 유사 직무 LinkedIn 공고 패턴 샘플링 기반 가중치</small></p>
-    </div>
-    <div class="report-block">
-      <strong>시장 변화 인사이트 (외부 리서치 반영)</strong>
-      <ul>
-        ${MARKET_SIGNALS.map((signal) => `<li>${signal}</li>`).join("")}
-      </ul>
-    </div>
-    <div class="report-block">
-      <strong>학습/리서치 소스 (결과 산출 근거)</strong>
-      <p><b>글로벌 트렌드 및 보고서</b></p>
-      <ul>${KNOWLEDGE_SOURCES.globalTrends.map((item) => `<li>${item}</li>`).join("")}</ul>
-      <p><b>실무 스택 및 채용 정보</b></p>
-      <ul>${KNOWLEDGE_SOURCES.practicalStack.map((item) => `<li>${item}</li>`).join("")}</ul>
-      <p><b>학술 및 커뮤니티</b></p>
-      <ul>${KNOWLEDGE_SOURCES.researchAndCommunity.map((item) => `<li>${item}</li>`).join("")}</ul>
-    </div>
-    <div class="report-block">
-      <strong>대안 직무</strong>
-      <ul>
-        ${result.alternatives.map((a) => `<li>${a.name} - ${a.evolutionFrom} (${a.salaryBand}, ${a.score}점, 1순위 대비 -${a.gapFromTop}점)</li>`).join("")}
-      </ul>
-    </div>
-    <div class="report-block">
-      <strong>즉시 실행 액션 (이번 주 시작)</strong>
-      <ul>
-        ${result.immediateActions.map((action) => `<li>${action}</li>`).join("")}
-      </ul>
-    </div>
-    <div class="report-block">
-      <strong>스킬 갭 분석 (우선 강화 순서)</strong>
-      <ul>
-        ${(result.focusSkills.length ? result.focusSkills : ["Python", "Prompt Engineering"]).map((s) => `<li>${s}</li>`).join("")}
-      </ul>
-    </div>
-    <div class="report-block">
-      <strong>30/60/90일 진화 퀘스트</strong>
-      ${result.quests.map((q) => `
-        <p><b>${q.phase}</b></p>
-        <ul>${q.tasks.map((t) => `<li>${t}</li>`).join("")}</ul>
-      `).join("")}
-    </div>
-    <div class="report-block">
-      <strong>동기 부여 루틴</strong>
-      <ul>
-        ${result.motivation.map((m) => `<li>${m.replace("- ", "")}</li>`).join("")}
-      </ul>
-    </div>
-    <div class="report-block">
-      <strong>입력 데이터 참고</strong>
-      <ul>
-        <li>경력 텍스트 길이: ${profile.careerText.length}자</li>
-        <li>경력 파일: ${profile.careerFile || "없음"} / URL: ${profile.careerUrl || "없음"}</li>
-        <li>약점 파일: ${profile.weaknessFile || "없음"} / URL: ${profile.weaknessUrl || "없음"}</li>
-      </ul>
+  `;
+
+  const phases = [
+    "입력 데이터 정규화 및 직무 매칭을 시작합니다.",
+    "LinkedIn 채용 시그널과 스킬 갭을 계산하고 있습니다.",
+    "시장 리포트 근거를 반영해 실행 계획을 구성하고 있습니다.",
+    "최종 리포트를 정리하고 있습니다."
+  ];
+
+  let remaining = 7;
+  let phaseIdx = 0;
+  const textNode = document.getElementById("loading-text");
+  const progressNode = document.getElementById("loading-progress");
+
+  const timer = setInterval(() => {
+    remaining -= 1;
+    phaseIdx = Math.min(phases.length - 1, phaseIdx + 1);
+    const done = Math.round(((7 - remaining) / 7) * 100);
+    if (progressNode) progressNode.style.width = `${done}%`;
+    if (textNode) textNode.textContent = `${phases[phaseIdx]} (${Math.max(remaining, 0)}초)`;
+    if (remaining <= 0) clearInterval(timer);
+  }, 1000);
+
+  return () => clearInterval(timer);
+}
+
+function renderReport(profile, result) {
+  const breakdown = result.topRole.analysis.scoreBreakdown;
+  const chartItems = [
+    { label: "필수 스킬", value: breakdown.skillPoints, max: 120 },
+    { label: "강점 시너지", value: breakdown.strengthPoints, max: 35 },
+    { label: "MBTI 적합", value: breakdown.mbtiPoints, max: 12 },
+    { label: "경력 서술", value: breakdown.experiencePoints, max: 8 }
+  ].map((item) => ({
+    ...item,
+    percent: Math.min(100, Math.round((item.value / item.max) * 100))
+  }));
+
+  reportPanel.classList.remove("hidden");
+  reportNode.classList.remove("empty");
+  reportNode.innerHTML = `
+    <div class="report-layout">
+      <div class="report-hero-block">
+        <p class="mini-label">AI Career Evolution Report</p>
+        <h3>${profile.name || "사용자"} 님 추천 포지션: ${result.topRole.name}</h3>
+        <p>${result.topRole.evolutionFrom} 기반으로 진화 경로를 분석했습니다. 예상 연봉 밴드: <b>${result.topRole.salaryBand}</b></p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <p>준비도 점수</p>
+          <strong>${result.normalizedScore}점</strong>
+          <span>${result.readinessTier} 단계</span>
+        </div>
+        <div class="kpi-card">
+          <p>채용요건 충족도</p>
+          <strong>${result.weightedDemandReadiness}%</strong>
+          <span>빈도 가중 기준</span>
+        </div>
+        <div class="kpi-card">
+          <p>직무 매칭 점수</p>
+          <strong>${result.topRole.score}점</strong>
+          <span>분석 신뢰도 ${result.confidence}</span>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h4>종합 지표 도넛</h4>
+          <div class="donut-grid">
+            <div class="donut" style="--value:${result.normalizedScore}">
+              <div><span>준비도</span><b>${result.normalizedScore}%</b></div>
+            </div>
+            <div class="donut donut--mint" style="--value:${result.weightedDemandReadiness}">
+              <div><span>요건 충족</span><b>${result.weightedDemandReadiness}%</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h4>점수 구성 차트</h4>
+          <div class="bars">
+            ${chartItems.map((item) => `
+              <div class="bar-row">
+                <div class="bar-head">
+                  <span>${item.label}</span>
+                  <b>${item.value}점</b>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width:${item.percent}%"></div></div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h4>요구조건 빈도 Top 5</h4>
+          <div class="bars">
+            ${result.demandSignals.map((item) => `
+              <div class="bar-row">
+                <div class="bar-head">
+                  <span>${item.skill}</span>
+                  <b>${item.demandPercent}%</b>
+                </div>
+                <div class="bar-track"><div class="bar-fill bar-fill--alt" style="width:${item.demandPercent}%"></div></div>
+                <small>${item.status}${item.level ? `(${item.level})` : ""} · ${item.evidence}</small>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <h4>대안 직무 비교</h4>
+          <div class="bars">
+            <div class="bar-row">
+              <div class="bar-head">
+                <span>${result.topRole.name}</span>
+                <b>${result.topRole.score}점</b>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:${Math.min(100, Math.round((result.topRole.score / 175) * 100))}%"></div></div>
+            </div>
+            ${result.alternatives.map((item) => `
+              <div class="bar-row">
+                <div class="bar-head">
+                  <span>${item.name}</span>
+                  <b>${item.score}점</b>
+                </div>
+                <div class="bar-track"><div class="bar-fill bar-fill--soft" style="width:${Math.min(100, Math.round((item.score / 175) * 100))}%"></div></div>
+                <small>1순위 대비 -${item.gapFromTop}점</small>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      </div>
+
+      <div class="report-block">
+        <strong>LinkedIn 채용 시그널</strong>
+        <ul>
+          ${result.topRole.hiringSignals.map((signal) => `<li>${signal}</li>`).join("")}
+        </ul>
+        <p><strong>현업 도구:</strong> ${result.topRole.toolStack.join(", ")}</p>
+        <p><strong>중요 KPI:</strong> ${result.topRole.outcomeMetrics.join(", ")}</p>
+        <p><strong>유사 채용 기업:</strong> ${result.topRole.linkedinEvidence.join(", ")}</p>
+      </div>
+
+      <div class="report-block">
+        <strong>즉시 실행 액션 (이번 주)</strong>
+        <ul>
+          ${result.immediateActions.map((action) => `<li>${action}</li>`).join("")}
+        </ul>
+      </div>
+
+      <div class="report-block">
+        <strong>30/60/90일 진화 퀘스트</strong>
+        ${result.quests.map((q) => `
+          <p><b>${q.phase}</b></p>
+          <ul>${q.tasks.map((t) => `<li>${t}</li>`).join("")}</ul>
+        `).join("")}
+      </div>
+
+      <div class="report-block">
+        <strong>시장 변화 인사이트</strong>
+        <ul>${MARKET_SIGNALS.map((signal) => `<li>${signal}</li>`).join("")}</ul>
+      </div>
+
+      <div class="report-block">
+        <strong>학습/리서치 소스</strong>
+        <p><b>글로벌 트렌드</b></p>
+        <ul>${KNOWLEDGE_SOURCES.globalTrends.map((item) => `<li>${item}</li>`).join("")}</ul>
+        <p><b>실무 스택</b></p>
+        <ul>${KNOWLEDGE_SOURCES.practicalStack.map((item) => `<li>${item}</li>`).join("")}</ul>
+        <p><b>학술/커뮤니티</b></p>
+        <ul>${KNOWLEDGE_SOURCES.researchAndCommunity.map((item) => `<li>${item}</li>`).join("")}</ul>
+      </div>
     </div>
   `;
 }
 
 addSkillBtn.addEventListener("click", () => createSkillRow());
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const profile = {
-    name: document.getElementById("name").value.trim(),
-    mbti: collectSelected("mbti"),
-    strengths: collectSelected("strength"),
-    careerText: document.getElementById("career-text").value.trim(),
-    careerFile: document.getElementById("career-file").files[0]?.name || "",
-    careerUrl: document.getElementById("career-url").value.trim(),
-    skills: collectSkills(),
-    weaknessText: document.getElementById("weakness-text").value.trim(),
-    weaknessFile: document.getElementById("weakness-file").files[0]?.name || "",
-    weaknessUrl: document.getElementById("weakness-url").value.trim()
-  };
+  if (form.dataset.loading === "true") return;
+  form.dataset.loading = "true";
+  submitBtn.disabled = true;
+  submitBtn.textContent = "분석 중...";
 
-  const result = buildEvolutionResult(profile);
-  renderReport(profile, result);
+  try {
+    const profile = {
+      name: document.getElementById("name").value.trim(),
+      mbti: collectSelected("mbti"),
+      strengths: collectSelected("strength"),
+      careerText: document.getElementById("career-text").value.trim(),
+      careerFile: document.getElementById("career-file").files[0]?.name || "",
+      careerUrl: document.getElementById("career-url").value.trim(),
+      skills: collectSkills(),
+      weaknessText: document.getElementById("weakness-text").value.trim(),
+      weaknessFile: document.getElementById("weakness-file").files[0]?.name || "",
+      weaknessUrl: document.getElementById("weakness-url").value.trim()
+    };
+
+    const result = buildEvolutionResult(profile);
+    const stopLoading = showLoadingState();
+    await new Promise((resolve) => setTimeout(resolve, 7000));
+    stopLoading();
+    renderReport(profile, result);
+  } finally {
+    form.dataset.loading = "false";
+    submitBtn.disabled = false;
+    submitBtn.textContent = "커리어 진화 리포트 생성";
+  }
 });
 
 renderChips(MBTI_TYPES, mbtiGrid, "mbti", 2, mbtiHint);
