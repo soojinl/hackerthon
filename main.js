@@ -70,6 +70,7 @@ const strengthHint = document.getElementById("strength-hint");
 const skillsWrap = document.getElementById("skills-wrap");
 const addSkillBtn = document.getElementById("add-skill");
 const form = document.getElementById("career-form");
+const reportPanel = document.getElementById("report-panel");
 const reportNode = document.getElementById("report");
 
 function renderChips(items, container, name, maxCount, hintNode) {
@@ -208,6 +209,7 @@ function buildEvolutionResult(profile) {
 }
 
 function renderReport(profile, result) {
+  reportPanel.classList.remove("hidden");
   reportNode.classList.remove("empty");
   reportNode.innerHTML = `
     <div class="report-block">

@@ -63,6 +63,10 @@ body {
   margin-top: 14px;
 }
 
+.hidden {
+  display: none;
+}
+
 .panel h2 {
   margin-top: 0;
 }
