@@ -63,34 +63,6 @@ const WEAKNESS_ROUTINES = [
   { keyword: "수학", plan: "기초 통계/선형대수 30분 학습 + 주 1회 문제 풀이" }
 ];
 
-const SYSTEM_ARCH = [
-  {
-    layer: "Frontend",
-    stack: "HTML/CSS/Vanilla JS (현재 MVP), React/Next.js 확장 가능",
-    detail: "입력 수집, 리포트 렌더링, 파일/URL 메타 수집"
-  },
-  {
-    layer: "API Layer",
-    stack: "Node.js + Fastify 또는 Python FastAPI",
-    detail: "이력서 파서/OCR 호출, 사용자 프로필 정규화, 리포트 요청 오케스트레이션"
-  },
-  {
-    layer: "AI Engine",
-    stack: "LLM(OpenAI 등) + 규칙 기반 점수화 엔진",
-    detail: "신직업 추천, 스킬 갭 퀘스트 생성, 동기 부여 루틴 생성"
-  },
-  {
-    layer: "Data",
-    stack: "PostgreSQL + Vector DB + Object Storage",
-    detail: "프로필/진화 이력 저장, 임베딩 검색, 파일 원본 저장"
-  },
-  {
-    layer: "Automation",
-    stack: "GitHub Actions + Monitoring",
-    detail: "배포, 평가 지표(전환율/완주율), A/B 테스트"
-  }
-];
-
 const mbtiGrid = document.getElementById("mbti-grid");
 const strengthGrid = document.getElementById("strength-grid");
 const mbtiHint = document.getElementById("mbti-hint");
@@ -98,7 +70,6 @@ const strengthHint = document.getElementById("strength-hint");
 const skillsWrap = document.getElementById("skills-wrap");
 const addSkillBtn = document.getElementById("add-skill");
 const form = document.getElementById("career-form");
-const architectureNode = document.getElementById("architecture");
 const reportNode = document.getElementById("report");
 
 function renderChips(items, container, name, maxCount, hintNode) {
@@ -146,18 +117,6 @@ function createSkillRow(skill = "", level = "mid") {
     row.remove();
   });
   skillsWrap.appendChild(row);
-}
-
-function renderArchitecture() {
-  architectureNode.innerHTML = SYSTEM_ARCH.map((item) => `
-    <div class="report-block">
-      <strong>${item.layer}</strong><br>
-      <span>${item.stack}</span>
-      <ul>
-        <li>${item.detail}</li>
-      </ul>
-    </div>
-  `).join("");
 }
 
 function collectSelected(name) {
@@ -316,6 +275,5 @@ form.addEventListener("submit", (event) => {
 
 renderChips(MBTI_TYPES, mbtiGrid, "mbti", 2, mbtiHint);
 renderChips(CLIFTON_34, strengthGrid, "strength", 5, strengthHint);
-renderArchitecture();
 createSkillRow("Python", "mid");
 createSkillRow("Prompt Engineering", "low");
