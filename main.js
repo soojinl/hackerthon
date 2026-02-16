@@ -112,7 +112,7 @@ const STRENGTH_REASON_MAP = {
 
 const ROLE_PROFILES = [
   {
-    name: "Tokenomics Architect",
+    name: "Tokenized Loyalty Economy Architect",
     evolutionFrom: "기존 직무: 전략/사업개발/데이터 기반 성장 리드",
     salaryBand: "1.8억~3.8억+",
     seniorityPreference: "senior",
@@ -120,7 +120,7 @@ const ROLE_PROFILES = [
     boostStrengths: ["Analytical", "Strategic", "Ideation", "Learner", "Input"],
     boostMbti: ["INTJ", "ENTJ", "INTP", "ENTP"],
     hiringSignals: [
-      "토큰/리워드/인센티브 구조를 수치 기반으로 설계한 경험",
+      "포인트/리워드/토큰형 인센티브 구조를 수치 기반으로 설계한 경험",
       "거버넌스/리스크/규제 대응을 고려한 성장 구조 설계 역량",
       "제품-재무-데이터 조직을 엮어 성장 메커니즘을 설계한 경험"
     ],
@@ -132,80 +132,80 @@ const ROLE_PROFILES = [
       { skill: "Leadership", demandPercent: 75, evidence: "C-level/핵심 조직 정렬 및 실행 리딩" }
     ],
     toolStack: ["SQL/BI", "시나리오 모델링", "자동화 워크플로", "LLM 분석 도구"],
-    outcomeMetrics: ["LTV/CAC 개선", "리텐션 상승", "토큰 설계 리스크 감소"],
+    outcomeMetrics: ["LTV/CAC 개선", "리텐션 상승", "로열티 구조 리스크 감소"],
     linkedinEvidence: ["Animoca Brands", "ConsenSys", "Binance"]
   },
   {
-    name: "Growth Lead",
-    evolutionFrom: "기존 직무: 마케팅/그로스/사업개발 리드",
+    name: "AI Marketing ROI & Forecast Strategist",
+    evolutionFrom: "기존 직무: 마케팅/그로스/사업기획 리드",
     salaryBand: "1.5억~3.2억+",
     seniorityPreference: "senior",
-    neededSkills: ["Strategic Planning", "Digital Marketing", "Data Analysis", "Leadership", "Project Management"],
-    boostStrengths: ["Activator", "Analytical", "Ideation", "Communication", "Learner"],
-    boostMbti: ["ENTJ", "ENTP", "ENFJ", "INTJ"],
+    neededSkills: ["Strategic Planning", "Financial Analysis", "Data Analysis", "Risk Management", "Project Management"],
+    boostStrengths: ["Analytical", "Learner", "Input", "Strategic", "Activator"],
+    boostMbti: ["INTJ", "ENTJ", "ENTP", "ISTJ"],
     hiringSignals: [
-      "성장 전략 수립부터 실행 체계까지 리드한 경험",
-      "획득/활성화/리텐션 지표를 개선한 정량 성과 보유",
-      "데이터 파이프라인·자동화 체계를 설계한 경험"
+      "AI 기반 ROI 측정 체계를 설계하고 예산 의사결정을 리드한 경험",
+      "시즌/이벤트별 마케팅 성과 예측 모델 운영 경험",
+      "시나리오 기반 예산 시뮬레이션과 성과 개선 경험"
     ],
     demandSignals: [
-      { skill: "Strategic Planning", demandPercent: 90, evidence: "분기/연간 성장 전략 설계" },
-      { skill: "Data Analysis", demandPercent: 86, evidence: "성장 실험·지표 해석" },
-      { skill: "Digital Marketing", demandPercent: 82, evidence: "획득 채널 운영/고도화" },
-      { skill: "Project Management", demandPercent: 78, evidence: "실행 체계·우선순위 운영" },
-      { skill: "Leadership", demandPercent: 76, evidence: "크로스펑셔널 팀 리딩" }
+      { skill: "Strategic Planning", demandPercent: 89, evidence: "ROI 최적화 전략 수립" },
+      { skill: "Financial Analysis", demandPercent: 86, evidence: "예산/수익성 분석" },
+      { skill: "Data Analysis", demandPercent: 84, evidence: "성과 예측·민감도 분석" },
+      { skill: "Risk Management", demandPercent: 79, evidence: "변동성/리스크 대응 계획" },
+      { skill: "Project Management", demandPercent: 75, evidence: "조직 간 실행 관리" }
     ],
-    toolStack: ["GA/Amplitude", "SQL/BI", "자동화 워크플로", "LLM 코파일럿"],
-    outcomeMetrics: ["ARR 성장", "리텐션 개선", "실험 속도 향상"],
-    linkedinEvidence: ["Stripe", "Notion", "HubSpot"]
+    toolStack: ["MMM/Attribution", "SQL/BI", "Forecast Models", "LLM 분석 보조"],
+    outcomeMetrics: ["마케팅 ROI 개선", "예측 오차 감소", "예산 효율 상승"],
+    linkedinEvidence: ["Hyundai Motor", "Unilever", "P&G"]
   },
   {
-    name: "AI Transformation Lead",
-    evolutionFrom: "기존 직무: 전략/운영/PM 조직 리드",
+    name: "Multi-Agent Revenue Operations Lead",
+    evolutionFrom: "기존 직무: 운영/사업/프로덕트 조직 리드",
     salaryBand: "1.4억~2.9억+",
     seniorityPreference: "senior",
-    neededSkills: ["Leadership", "Change Management", "Strategic Planning", "No-Code Automation", "Stakeholder Communication"],
-    boostStrengths: ["Activator", "Learner", "Analytical", "Command", "Strategic"],
-    boostMbti: ["ENTJ", "ENFJ", "INTJ", "ESTJ"],
+    neededSkills: ["Leadership", "No-Code Automation", "Data Analysis", "Strategic Planning", "Stakeholder Communication"],
+    boostStrengths: ["Activator", "Analytical", "Strategic", "Learner", "Input"],
+    boostMbti: ["ENTJ", "INTJ", "ENTP", "ESTJ"],
     hiringSignals: [
-      "조직 단위 AI 전환 로드맵 수립 및 실행 경험",
-      "업무 표준화/자동화로 운영 생산성 개선 성과",
-      "현업 저항을 낮춘 변화관리 커뮤니케이션 역량"
+      "멀티 에이전트 기반 캠페인/운영 자동화 구조 설계 경험",
+      "수익/마진 개선과 연결된 자동화 성과 보유",
+      "제품-마케팅-운영 조직을 연결해 실행 체계를 설계한 경험"
     ],
     demandSignals: [
-      { skill: "Leadership", demandPercent: 88, evidence: "전사 전환 프로그램 리딩" },
-      { skill: "Change Management", demandPercent: 84, evidence: "조직 도입·정착 운영" },
-      { skill: "No-Code Automation", demandPercent: 80, evidence: "반복 업무 자동화 구조화" },
-      { skill: "Strategic Planning", demandPercent: 78, evidence: "중장기 로드맵·성과관리" },
-      { skill: "Stakeholder Communication", demandPercent: 76, evidence: "경영진/현업 정렬" }
+      { skill: "Leadership", demandPercent: 88, evidence: "전사 자동화 프로그램 리딩" },
+      { skill: "No-Code Automation", demandPercent: 85, evidence: "업무 자동화 파이프라인 구축" },
+      { skill: "Data Analysis", demandPercent: 81, evidence: "성과 모니터링 및 개선" },
+      { skill: "Strategic Planning", demandPercent: 79, evidence: "레버리지 중심 우선순위 설계" },
+      { skill: "Stakeholder Communication", demandPercent: 76, evidence: "조직 간 의사결정 정렬" }
     ],
-    toolStack: ["Process Mining", "Automation Suite", "BI Dashboard", "LLM Assistants"],
-    outcomeMetrics: ["운영비 절감", "처리시간 단축", "도입 정착률 상승"],
-    linkedinEvidence: ["Accenture", "Deloitte", "Microsoft"]
+    toolStack: ["Agent Orchestrator", "Workflow Automation", "Vector DB", "BI Dashboard"],
+    outcomeMetrics: ["운영마진 개선", "처리시간 단축", "자동화 커버리지 확대"],
+    linkedinEvidence: ["Forsit", "Workato", "UiPath"]
   },
   {
-    name: "Revenue Strategy Lead",
+    name: "Agentic Marketing Systems Architect",
     evolutionFrom: "기존 직무: 영업기획/재무/전략기획",
     salaryBand: "1.3억~2.6억+",
     seniorityPreference: "mid",
-    neededSkills: ["Financial Analysis", "Strategic Planning", "Stakeholder Communication", "Operations", "Data Analysis"],
-    boostStrengths: ["Analytical", "Input", "Responsibility", "Strategic", "Focus"],
-    boostMbti: ["INTJ", "ISTJ", "ENTJ", "ESTJ"],
+    neededSkills: ["Strategic Planning", "Digital Marketing", "No-Code Automation", "Data Analysis", "Stakeholder Communication"],
+    boostStrengths: ["Analytical", "Ideation", "Activator", "Input", "Learner"],
+    boostMbti: ["ENTP", "INTJ", "ENTJ", "ENFJ"],
     hiringSignals: [
-      "매출·비용·이익 지표를 연결한 전략 설계 경험",
-      "조직별 KPI 정렬 및 성과관리 운영 경험",
-      "리포팅 자동화와 경영 의사결정 지원 경험"
+      "캠페인 구조를 멀티 에이전트 워크플로우로 전환한 경험",
+      "퍼널 전체를 시스템 단위로 설계하고 성과를 개선한 경험",
+      "측정-실험-최적화 루프를 자동화한 경험"
     ],
     demandSignals: [
-      { skill: "Financial Analysis", demandPercent: 87, evidence: "수익성 기반 전략 도출" },
-      { skill: "Strategic Planning", demandPercent: 83, evidence: "성장/수익 계획 수립" },
-      { skill: "Data Analysis", demandPercent: 79, evidence: "지표 인사이트 도출" },
-      { skill: "Operations", demandPercent: 76, evidence: "실행 체계 최적화" },
-      { skill: "Stakeholder Communication", demandPercent: 74, evidence: "경영진/현업 의사결정 지원" }
+      { skill: "Strategic Planning", demandPercent: 87, evidence: "시스템 기반 성장 설계" },
+      { skill: "No-Code Automation", demandPercent: 84, evidence: "워크플로우 자동화 구축" },
+      { skill: "Data Analysis", demandPercent: 81, evidence: "실험/성과 데이터 해석" },
+      { skill: "Digital Marketing", demandPercent: 77, evidence: "채널/메시지 운영 최적화" },
+      { skill: "Stakeholder Communication", demandPercent: 74, evidence: "제품/마케팅/데이터 협업" }
     ],
-    toolStack: ["FP&A 모델", "SQL/BI", "자동화 리포팅", "LLM 분석 보조"],
-    outcomeMetrics: ["매출총이익 개선", "예측 정확도 향상", "의사결정 리드타임 단축"],
-    linkedinEvidence: ["Salesforce", "Adobe", "Atlassian"]
+    toolStack: ["LLM Agent Framework", "Attribution Stack", "Workflow Engine", "Experimentation Platform"],
+    outcomeMetrics: ["전환율 개선", "실험 속도 증가", "캠페인 운영비 절감"],
+    linkedinEvidence: ["Meta", "Google", "TikTok"]
   }
 ];
 
@@ -386,17 +386,31 @@ function getRoleNarrative(roleName, profile, result) {
   const firstGap = result.focusSkills[0] || "Strategic Planning";
   const secondGap = result.focusSkills[1] || "Data Analysis";
 
-  if (roleName === "Tokenomics Architect") {
+  if (roleName === "Tokenized Loyalty Economy Architect") {
     return {
-      whyFit: "포인트/리워드/CRM 설계 경험은 토큰 기반 인센티브 구조 설계와 직접적으로 연결됩니다. 여기에 AI 자동화를 결합하면 단순 운영이 아닌 성장형 로열티 시스템 설계 역할로 확장할 수 있습니다.",
+      whyFit: "포인트/멤버십/CRM 설계 경험은 토큰화된 로열티 경제 설계와 직접적으로 연결됩니다. AI 자동화가 결합되면 단순 운영이 아닌 가치 교환 구조 설계자로 확장됩니다.",
       value: `정량 성과와 자동화 역량을 결합해 LTV/CAC 구조를 재설계하는 포지션입니다. 특히 ${firstGap} 역량을 강화하면 기업의 수익 구조 설계자로서 가치가 급상승합니다.`
     };
   }
 
-  if (roleName === "Growth Lead") {
+  if (roleName === "AI Marketing ROI & Forecast Strategist") {
     return {
-      whyFit: "AARRR, CRM, 리텐션 최적화 경험은 AI 기반 프로덕트 그로스의 핵심 역량과 일치합니다. 데이터 해석과 실험 설계 경험이 있으면 MVP-리텐션-확장 사이클을 리드할 수 있습니다.",
-      value: `단순 캠페인 운영이 아니라 성장 로직 자체를 설계하는 역할입니다. ${secondGap} 중심 자동화까지 연결되면 고액 연봉+스톡옵션 포지션으로 이동 가능성이 커집니다.`
+      whyFit: "마케팅 성과 분석과 예산 운영 경험은 AI 기반 ROI 분석·예측 직무와 정합성이 높습니다. 특히 시뮬레이션 기반 의사결정 역량이 핵심 경쟁력입니다.",
+      value: `캠페인 집행자가 아니라 ROI와 수익성을 설계하는 포지션입니다. ${secondGap} 기반 모델 고도화 역량이 붙으면 보상 레벨이 빠르게 상승합니다.`
+    };
+  }
+
+  if (roleName === "Multi-Agent Revenue Operations Lead") {
+    return {
+      whyFit: "운영/마케팅/데이터 흐름을 연결해본 경험은 멀티 에이전트 기반 수익 운영 체계 설계에 직접 활용됩니다.",
+      value: "사람 중심 운영을 AI 에이전트 시스템으로 전환해 마진 개선을 만드는 역할이라 경영진 레벨 임팩트를 만듭니다."
+    };
+  }
+
+  if (roleName === "Agentic Marketing Systems Architect") {
+    return {
+      whyFit: "퍼널, 실험, 자동화 경험을 시스템 단위로 재설계할 수 있으면 에이전틱 마케팅 구조 설계자로 포지셔닝할 수 있습니다.",
+      value: "메시지-채널-측정-최적화를 하나의 자동화 루프로 만든 인재는 대체가 어려워 프리미엄 보상 구간으로 이동합니다."
     };
   }
 
