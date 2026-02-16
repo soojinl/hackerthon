@@ -24,43 +24,62 @@
         <div class="field-row">
           <div class="field field-card">
             <label for="current-role">현재 직무</label>
-            <select id="current-role" name="current-role">
-              <option value="">선택해주세요</option>
-              <option>기획/전략</option>
-              <option>마케팅</option>
-              <option>영업/사업개발</option>
-              <option>운영/고객성공</option>
-              <option>개발/엔지니어링</option>
-              <option>데이터/분석</option>
-              <option>디자인</option>
-              <option>HR/채용</option>
-              <option>재무/회계</option>
-              <option>학생/취업준비</option>
-              <option>기타</option>
-            </select>
+            <input
+              id="current-role"
+              name="current-role"
+              type="text"
+              placeholder="예: B2B SaaS 세일즈 오퍼레이션 매니저 (파이프라인 관리, CRM 자동화)"
+            >
+            <p class="hint">산업/역할/핵심업무까지 함께 적어주면 진단 정확도가 올라갑니다.</p>
           </div>
 
           <div class="field field-card">
             <label for="career-years">연차</label>
             <select id="career-years" name="career-years">
               <option value="">선택해주세요</option>
-              <option>신입 (1년 미만)</option>
-              <option>1-3년</option>
-              <option>4-6년</option>
-              <option>7-10년</option>
-              <option>11년 이상</option>
+              <option>신입 (0년차)</option>
+              <option>1년차</option>
+              <option>2년차</option>
+              <option>3년차</option>
+              <option>4년차</option>
+              <option>5년차</option>
+              <option>6년차</option>
+              <option>7년차</option>
+              <option>8년차</option>
+              <option>9년차</option>
+              <option>10년차</option>
+              <option>11년차</option>
+              <option>12년차</option>
+              <option>13년차</option>
+              <option>14년차</option>
+              <option>15년차</option>
+              <option>16년차</option>
+              <option>17년차</option>
+              <option>18년차</option>
+              <option>19년차</option>
+              <option>20년차</option>
+              <option>21년차</option>
+              <option>22년차</option>
+              <option>23년차</option>
+              <option>24년차</option>
+              <option>25년차</option>
+              <option>26년차</option>
+              <option>27년차</option>
+              <option>28년차</option>
+              <option>29년차</option>
+              <option>30년차</option>
             </select>
           </div>
         </div>
 
         <div class="field field-card">
-          <label>MBTI (최대 2개 선택)</label>
+          <label>MBTI <span class="label-note">(최대 2개 선택)</span></label>
           <div id="mbti-grid" class="chips"></div>
           <p class="hint" id="mbti-hint">0 / 2 선택됨</p>
         </div>
 
         <div class="field field-card">
-          <label>나의 강점 (최대 5개 선택)</label>
+          <label>나의 강점 <span class="label-note">(최대 5개 선택)</span></label>
           <div id="strength-grid" class="chips chips--dense"></div>
           <p class="hint" id="strength-hint">0 / 5 선택됨</p>
         </div>
@@ -81,8 +100,8 @@
         </div>
 
         <div class="field field-card">
-          <label for="weakness-text">기타 (ex. 나를 알 수 있는 정보)</label>
-          <textarea id="weakness-text" placeholder="예: 영어 발표가 약함, 시간 관리 어려움, 포트폴리오 부족"></textarea>
+          <label for="weakness-text">기타 <span class="label-note">(ex. 나를 알 수 있는 정보)</span></label>
+          <textarea id="weakness-text"></textarea>
           <div class="input-row">
             <input id="weakness-file" type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
             <input id="weakness-url" type="url" placeholder="참고 URL">

@@ -15,12 +15,63 @@ const CLIFTON_34 = [
 ];
 
 const SKILL_OPTIONS = [
-  "Python", "JavaScript", "TypeScript", "SQL", "Excel", "Power BI",
-  "Machine Learning", "Deep Learning", "Prompt Engineering", "No-Code Automation",
-  "Product Management", "UX Research", "Digital Marketing", "Sales", "Consulting",
-  "Cloud", "MLOps", "Data Engineering", "Technical Writing", "Leadership",
-  "Project Management", "Customer Success", "Operations", "Stakeholder Communication"
+  "Communication",
+  "Stakeholder Communication",
+  "Leadership",
+  "Team Management",
+  "Project Management",
+  "Program Management",
+  "Problem Solving",
+  "Critical Thinking",
+  "Strategic Planning",
+  "Decision Making",
+  "Negotiation",
+  "Presentation",
+  "Public Speaking",
+  "Coaching",
+  "Change Management",
+  "Conflict Resolution",
+  "Time Management",
+  "Sales",
+  "Account Management",
+  "Business Development",
+  "Customer Success",
+  "Customer Service",
+  "Consulting",
+  "Digital Marketing",
+  "Brand Marketing",
+  "Content Marketing",
+  "Social Media Marketing",
+  "SEO/SEM",
+  "Product Management",
+  "UX Research",
+  "Operations",
+  "Supply Chain",
+  "Procurement",
+  "Financial Analysis",
+  "Budget Planning",
+  "Risk Management",
+  "Compliance",
+  "Recruiting",
+  "HR Operations",
+  "Training & Development",
+  "Technical Writing",
+  "Excel",
+  "Power BI",
+  "Data Analysis",
+  "SQL",
+  "No-Code Automation",
+  "Prompt Engineering",
+  "Python",
+  "JavaScript",
+  "TypeScript",
+  "Cloud",
+  "Data Engineering",
+  "Machine Learning",
+  "Deep Learning",
+  "MLOps"
 ];
+const CUSTOM_SKILL_VALUE = "__custom__";
 
 const LEVEL_OPTIONS = ["low", "mid", "high"];
 
@@ -192,15 +243,31 @@ function renderChips(items, container, name, maxCount, hintNode) {
 function createSkillRow(skill = "", level = "mid") {
   const row = document.createElement("div");
   row.className = "skills-row";
+  const isPresetSkill = SKILL_OPTIONS.includes(skill);
+  const selectedSkill = isPresetSkill ? skill : CUSTOM_SKILL_VALUE;
+  const customSkill = isPresetSkill ? "" : skill;
+
   row.innerHTML = `
     <select class="skill-name">
-      ${SKILL_OPTIONS.map((s) => `<option value="${s}" ${s === skill ? "selected" : ""}>${s}</option>`).join("")}
+      ${SKILL_OPTIONS.map((s) => `<option value="${s}" ${s === selectedSkill ? "selected" : ""}>${s}</option>`).join("")}
+      <option value="${CUSTOM_SKILL_VALUE}" ${selectedSkill === CUSTOM_SKILL_VALUE ? "selected" : ""}>직접 입력</option>
     </select>
     <select class="skill-level">
       ${LEVEL_OPTIONS.map((l) => `<option value="${l}" ${l === level ? "selected" : ""}>${l}</option>`).join("")}
     </select>
     <button type="button" class="btn btn--danger remove-skill">삭제</button>
+    <input type="text" class="skill-custom ${selectedSkill === CUSTOM_SKILL_VALUE ? "" : "hidden"}" placeholder="직접 입력 스킬 (예: 협상, 예산관리, 리스크 관리)">
   `;
+
+  const nameSelect = row.querySelector(".skill-name");
+  const customInput = row.querySelector(".skill-custom");
+  customInput.value = customSkill;
+
+  nameSelect.addEventListener("change", () => {
+    const isCustom = nameSelect.value === CUSTOM_SKILL_VALUE;
+    customInput.classList.toggle("hidden", !isCustom);
+    if (isCustom) customInput.focus();
+  });
 
   row.querySelector(".remove-skill").addEventListener("click", () => {
     row.remove();
@@ -213,10 +280,19 @@ function collectSelected(name) {
 }
 
 function collectSkills() {
-  return Array.from(document.querySelectorAll(".skills-row")).map((row) => ({
-    name: row.querySelector(".skill-name").value,
-    level: row.querySelector(".skill-level").value
-  }));
+  return Array.from(document.querySelectorAll(".skills-row"))
+    .map((row) => {
+      const selectedSkill = row.querySelector(".skill-name").value;
+      const customSkill = row.querySelector(".skill-custom").value.trim();
+      const name = selectedSkill === CUSTOM_SKILL_VALUE ? customSkill : selectedSkill;
+      if (!name) return null;
+
+      return {
+        name,
+        level: row.querySelector(".skill-level").value
+      };
+    })
+    .filter(Boolean);
 }
 
 function calculateRoleAnalysis(profile, role) {
@@ -599,5 +675,5 @@ form.addEventListener("submit", async (event) => {
 
 renderChips(MBTI_TYPES, mbtiGrid, "mbti", 2, mbtiHint);
 renderChips(CLIFTON_34, strengthGrid, "strength", 5, strengthHint);
-createSkillRow("Python", "mid");
-createSkillRow("Prompt Engineering", "low");
+createSkillRow("Communication", "mid");
+createSkillRow("Project Management", "mid");

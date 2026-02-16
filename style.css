@@ -151,6 +151,11 @@ label {
   letter-spacing: 0.01em;
 }
 
+.label-note {
+  font-weight: 400;
+  color: var(--muted);
+}
+
 input,
 textarea,
 select,
@@ -243,6 +248,10 @@ textarea {
   grid-template-columns: 1.6fr 1fr auto;
   gap: 10px;
   margin-bottom: 10px;
+}
+
+.skill-custom {
+  grid-column: 1 / -1;
 }
 
 .btn {
